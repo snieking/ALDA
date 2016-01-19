@@ -7,7 +7,7 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 	
 	private static class Node<T> {
 		private final T data;
-		private Node<T> next;
+		private Node<T> next = null;
 		
 		public Node (T data) {
 			this.data=data;
@@ -19,9 +19,24 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 	}
 	
 	private class QueueIterator implements java.util.Iterator<E> {
-		private Node<E> current = head.next;
+		private Node<E> current = head;
 		private int expectedCap = capacity;
 		private boolean canRemove = false;
+		
+		/*
+		private Node<E> setNext() {
+			System.out.println("Ska sätta next...");
+			Node<E> iterNext = null;
+			if(head.next != null && currentSize > 0)
+				iterNext = head.next;
+			
+			System.out.println("Satte next...");
+			return iterNext;	
+		} */
+		
+		public QueueIterator() {
+			
+		}
 		
 		public Node<E> getCurrent() {
 			return current;
@@ -34,6 +49,7 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 
 		@Override
 		public E next() {
+			System.out.println("Will try next");
 			if(capacity != expectedCap)
 				throw new java.util.ConcurrentModificationException();
 			if(!hasNext())
@@ -69,11 +85,15 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 
 	@Override
 	public Iterator<E> iterator() {
-		return new QueueIterator();
+		QueueIterator iter = new QueueIterator();
+		return iter;
 	}
 
 	@Override
 	public void add(E element) { 						// Inspiration från: http://codereview.stackexchange.com/questions/62746/queue-implementation-using-a-linked-list
+		if(element == null)
+			throw new java.lang.NullPointerException();
+		
 		Node<E> n = new Node<E>(element);
 		if (isEmpty()) {
 			n.next = head;
@@ -95,14 +115,17 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 
 	@Override
 	public E remove() {
-		// TODO Auto-generated method stub
-		return null;
+		if(isEmpty())
+			throw new java.util.NoSuchElementException();
+		
+		Node<E> toRemove = head;
+		head = head.next;
+		return (E) toRemove;
 	}
 
 	@Override
 	public E peek() {
-		// TODO Auto-generated method stub
-		return null;
+		return (E) head;
 	}
 
 	@Override
@@ -151,14 +174,16 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 	
 	@Override
 	public String toString() {
-		String listString = "";
-		Iterator<E> iter = iterator();
+		String listString = "[";
+		
+		QueueIterator iter = (MyALDAQueue<E>.QueueIterator) iterator();
 		while(iter.hasNext()) {
 			listString += ((QueueIterator) iter).getCurrent();
 			iter.next();
 		}
-		return listString;
-	}
+		listString += "]";
+		return listString; 
+	} 
 
 
 

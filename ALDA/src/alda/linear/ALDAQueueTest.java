@@ -128,35 +128,35 @@ public class ALDAQueueTest {
 		testQueueProperties(queue, true, false, 0, DEFAULT_CAPACITY, DEFAULT_CAPACITY, "[]");
 	}
 
-//	@Test
-//	public void testPeekOnEmptyQueue() {
-//		assertEquals(null, createNewStringQueue().peek());
-//	}
-//
-//	@Test(expected = NoSuchElementException.class)
-//	public void testRemoveOnEmptyQueue() {
-//		createNewIntegerQueue().remove();
-//	}
-//
-//	@Test(expected = NullPointerException.class)
-//	public void testAddingNull() {
-//		createNewStringQueue().add(null);
-//	}
-//
-//	@Test
-//	public void testAddingAndRemovingOneElement() {
-//		ALDAQueue<String> queue = createNewStringQueue();
-//		queue.add(A_STRING);
-//
-//		testQueueProperties(queue, false, false, 1, DEFAULT_CAPACITY, DEFAULT_CAPACITY - 1, "[" + A_STRING + "]");
-//
-//		assertEquals(A_STRING, queue.peek());
-//		testQueueProperties(queue, false, false, 1, DEFAULT_CAPACITY, DEFAULT_CAPACITY - 1, "[" + A_STRING + "]");
-//
-//		assertEquals(A_STRING, queue.remove());
-//		testQueueProperties(queue, true, false, 0, DEFAULT_CAPACITY, DEFAULT_CAPACITY, "[]");
-//	}
-//
+	@Test
+	public void testPeekOnEmptyQueue() {
+		assertEquals(null, createNewStringQueue().peek());
+	}
+
+	@Test(expected = NoSuchElementException.class)
+	public void testRemoveOnEmptyQueue() {
+		createNewIntegerQueue().remove();
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void testAddingNull() {
+		createNewStringQueue().add(null);
+	}
+
+	@Test
+	public void testAddingAndRemovingOneElement() {
+		ALDAQueue<String> queue = createNewStringQueue();
+		queue.add(A_STRING);
+
+		testQueueProperties(queue, false, false, 1, DEFAULT_CAPACITY, DEFAULT_CAPACITY - 1, "[" + A_STRING + "]");
+
+		assertEquals(A_STRING, queue.peek());
+		testQueueProperties(queue, false, false, 1, DEFAULT_CAPACITY, DEFAULT_CAPACITY - 1, "[" + A_STRING + "]");
+
+		assertEquals(A_STRING, queue.remove());
+		testQueueProperties(queue, true, false, 0, DEFAULT_CAPACITY, DEFAULT_CAPACITY, "[]");
+	}
+
 //	@Test
 //	public void testAddingAndRemovingSeveralElements() {
 //		ALDAQueue<String> queue = createNewStringQueue();
