@@ -16,6 +16,10 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 		public void displayNode() {
 			System.out.println(data + " ");
 		}
+		
+		public String toString() {
+			return "" + data;
+		}
 	}
 	
 	private class QueueIterator implements java.util.Iterator<E> {
@@ -99,10 +103,12 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 			n.next = head;
 			head = n;
 			tail = n;
-		} else {
+			currentSize++;
+		} else if(currentSize < 8){
 			tail.next = n;
 			tail = n;
 			tail.next = null;
+			currentSize++;
 		}
 		
 	}
@@ -177,7 +183,7 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 		String listString = "[";
 		
 		QueueIterator iter = (MyALDAQueue<E>.QueueIterator) iterator();
-		while(iter.hasNext()) {
+		while(iter.getCurrent() != null) {
 			listString += ((QueueIterator) iter).getCurrent();
 			iter.next();
 		}
