@@ -8,6 +8,7 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 	private static class Node<T> {
 		private final T data;
 		private Node<T> next = null;
+		private boolean hasMoved = false;
 		
 		public Node (T data) {
 			this.data=data;
@@ -17,8 +18,12 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 			System.out.println(data + " ");
 		}
 		
+		public T printData() {
+			return data;
+		}
+		
 		public String toString() {
-			return "" + data;
+			return (String) data;
 		}
 	}
 	
@@ -27,16 +32,6 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 		private int expectedCap = capacity;
 		private boolean canRemove = false;
 		
-		/*
-		private Node<E> setNext() {
-			System.out.println("Ska sätta next...");
-			Node<E> iterNext = null;
-			if(head.next != null && currentSize > 0)
-				iterNext = head.next;
-			
-			System.out.println("Satte next...");
-			return iterNext;	
-		} */
 		
 		public QueueIterator() {
 			
@@ -48,21 +43,28 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 
 		@Override
 		public boolean hasNext() {
-			return current != tail;
+			if(currentSize == 0)
+				throw new java.util.NoSuchElementException();
+			
+			return current.next != null;
 		}
 
 		@Override
 		public E next() {
-			System.out.println("Will try next");
 			if(capacity != expectedCap)
 				throw new java.util.ConcurrentModificationException();
-			if(!hasNext())
+			if(currentSize == 0)
 				throw new java.util.NoSuchElementException();
 			
-			E nextElement = current.data;
+			E nextElement = (E) current;
 			current = current.next;
 			canRemove = true;
 			return nextElement;
+		}
+		
+		public E peekNext() {
+			E peek = (E) current.next;
+			return peek;
 		}
 		
 		public void remove() {
@@ -94,9 +96,12 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 	}
 
 	@Override
-	public void add(E element) { 						// Inspiration från: http://codereview.stackexchange.com/questions/62746/queue-implementation-using-a-linked-list
+	public void add(E element) { 															// Inspiration från: http://codereview.stackexchange.com/questions/62746/queue-implementation-using-a-linked-list
 		if(element == null)
 			throw new java.lang.NullPointerException();
+		
+		if(currentSize == capacity)
+			throw new java.lang.IllegalStateException();
 		
 		Node<E> n = new Node<E>(element);
 		if (isEmpty()) {
@@ -104,7 +109,7 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 			head = n;
 			tail = n;
 			currentSize++;
-		} else if(currentSize < 8){
+		} else {
 			tail.next = n;
 			tail = n;
 			tail.next = null;
@@ -115,7 +120,12 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 
 	@Override
 	public void addAll(Collection<? extends E> c) {
-		// TODO Auto-generated method stub
+		if(c == null)
+			throw new java.lang.NullPointerException();
+		
+		for(E element : c) {
+			add(element);
+		}
 		
 	}
 
@@ -126,18 +136,23 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 		
 		Node<E> toRemove = head;
 		head = head.next;
-		return (E) toRemove;
+		currentSize--;
+		return toRemove.printData();
 	}
 
 	@Override
 	public E peek() {
-		return (E) head;
+		if(head != null)
+			return (E) head.printData();
+		else
+			return null;
 	}
 
 	@Override
 	public void clear() {
-		// TODO Auto-generated method stub
-		
+		head = null;
+		tail = null;
+		currentSize = 0;
 	}
 
 	@Override
@@ -173,8 +188,61 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 
 	@Override
 	public int discriminate(E e) {
-		// TODO Auto-generated method stub
-		return 0;
+		if(e == null)
+			throw new java.lang.NullPointerException();
+		
+		int timesMoved = 0;
+		QueueIterator iter = (MyALDAQueue<E>.QueueIterator) iterator();
+		Node<E> compareNode = new Node<E>(e);
+		
+
+		Node<E> backupHead = head;
+		Node<E> backupTail = tail;
+		clear();
+		
+		Node<E> inspecting = backupHead;
+		
+		while(inspecting != null) {
+			System.out.println("Tittar nu på: " + inspecting + " : har flyttats = " + inspecting.hasMoved);
+			if(inspecting.hasMoved == false && inspecting.printData().equals(compareNode.printData())) {
+				System.out.println("Found a match...");
+				add(inspecting.data);
+				inspecting.hasMoved = true;
+				timesMoved++;
+
+				System.out.println(toString());
+				
+			} else {
+				inspecting = inspecting.next;
+			}
+		}
+		
+		System.out.println("Extra listan: " + toString());
+		Node<E> tempHead = head;
+		Node<E> tempTail = tail;
+		head = backupHead;
+		tail = backupTail;
+		
+		currentSize = 0;
+		
+		Node<E> notSearchingFor = head;
+		while(notSearchingFor != null) {
+			if(notSearchingFor.hasMoved == false && !(notSearchingFor.printData().equals(compareNode.printData()))) {
+				add(notSearchingFor.data);
+				notSearchingFor.hasMoved = true;
+			} else
+				notSearchingFor = notSearchingFor.next;
+		}
+		
+		Node<E> temp = tempHead;
+		while(temp != null) {
+			add(temp.data);
+			temp = temp.next;
+		}
+		
+		System.out.println("Färdiga listan: " + toString());
+		
+		return timesMoved;
 	}
 	
 	
@@ -184,8 +252,10 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 		
 		QueueIterator iter = (MyALDAQueue<E>.QueueIterator) iterator();
 		while(iter.getCurrent() != null) {
-			listString += ((QueueIterator) iter).getCurrent();
+			listString += ((QueueIterator) iter).getCurrent().printData();
 			iter.next();
+			if(iter.getCurrent() != null)
+				listString += ", ";
 		}
 		listString += "]";
 		return listString; 
