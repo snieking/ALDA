@@ -14,16 +14,13 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 			this.data=data;
 		}
 		
-		public void displayNode() {
-			System.out.println(data + " ");
-		}
-		
 		public T printData() {
 			return data;
 		}
 		
+		@Override
 		public String toString() {
-			return (String) data;
+			return data.toString();
 		}
 	}
 	
@@ -56,15 +53,11 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 			if(currentSize == 0)
 				throw new java.util.NoSuchElementException();
 			
-			E nextElement = (E) current;
+			Node<E> toReturn = current;
+			toReturn = current;
 			current = current.next;
 			canRemove = true;
-			return nextElement;
-		}
-		
-		public E peekNext() {
-			E peek = (E) current.next;
-			return peek;
+			return (E) toReturn;
 		}
 		
 		public void remove() {
@@ -105,9 +98,10 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 		
 		Node<E> n = new Node<E>(element);
 		if (isEmpty()) {
-			n.next = head;
+			n.next = head; // TODO: behöver jag den?
 			head = n;
 			tail = n;
+			tail.next = null;
 			currentSize++;
 		} else {
 			tail.next = n;
@@ -203,9 +197,7 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 		Node<E> inspecting = backupHead;
 		
 		while(inspecting != null) {
-			System.out.println("Tittar nu på: " + inspecting + " : har flyttats = " + inspecting.hasMoved);
 			if(inspecting.hasMoved == false && inspecting.printData().equals(compareNode.printData())) {
-				System.out.println("Found a match...");
 				add(inspecting.data);
 				inspecting.hasMoved = true;
 				timesMoved++;
@@ -216,8 +208,7 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 				inspecting = inspecting.next;
 			}
 		}
-		
-		System.out.println("Extra listan: " + toString());
+
 		Node<E> tempHead = head;
 		Node<E> tempTail = tail;
 		head = backupHead;
@@ -239,8 +230,6 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 			add(temp.data);
 			temp = temp.next;
 		}
-		
-		System.out.println("Färdiga listan: " + toString());
 		
 		return timesMoved;
 	}
