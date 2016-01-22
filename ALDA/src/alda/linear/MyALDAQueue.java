@@ -190,7 +190,6 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 				add(inspecting.data);
 				inspecting.hasMoved = true;
 				timesMoved++;
-				
 			} else {
 				inspecting = inspecting.next;
 			}
