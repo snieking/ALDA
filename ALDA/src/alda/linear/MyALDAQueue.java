@@ -40,34 +40,24 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 
 		@Override
 		public boolean hasNext() {
-			if(currentSize == 0)
-				throw new java.util.NoSuchElementException();
-			
-			return current.next != null;
+			return current != null;
 		}
 
 		@Override
 		public E next() {
 			if(capacity != expectedCap)
 				throw new java.util.ConcurrentModificationException();
-			if(currentSize == 0)
+			if(!hasNext())
 				throw new java.util.NoSuchElementException();
 			
-			Node<E> toReturn = current;
-			toReturn = current;
+			Node<E> toReturn = new Node<E>(current.data);
+
 			current = current.next;
 			canRemove = true;
-			return (E) toReturn;
+			return toReturn.data;
 		}
 		
-		public void remove() {
-			if(capacity != expectedCap)
-				throw new java.util.ConcurrentModificationException();
-			if(!canRemove)
-				throw new IllegalStateException();
-			
-			// TODO: Implement remove
-		}
+		public void remove() { }
 		
 	}
 	
@@ -98,7 +88,6 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 		
 		Node<E> n = new Node<E>(element);
 		if (isEmpty()) {
-			n.next = head; // TODO: behöver jag den?
 			head = n;
 			tail = n;
 			tail.next = null;
@@ -186,7 +175,7 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 			throw new java.lang.NullPointerException();
 		
 		int timesMoved = 0;
-		QueueIterator iter = (MyALDAQueue<E>.QueueIterator) iterator();
+		
 		Node<E> compareNode = new Node<E>(e);
 		
 
@@ -201,8 +190,6 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 				add(inspecting.data);
 				inspecting.hasMoved = true;
 				timesMoved++;
-
-				System.out.println(toString());
 				
 			} else {
 				inspecting = inspecting.next;
@@ -210,7 +197,6 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 		}
 
 		Node<E> tempHead = head;
-		Node<E> tempTail = tail;
 		head = backupHead;
 		tail = backupTail;
 		
