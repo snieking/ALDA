@@ -1,5 +1,7 @@
 package alda.tree;
 
+import java.util.stream.IntStream;
+
 /**
  * Denna klass representerar noderna i ett binärt säkträd utan dubletter.
  * 
@@ -101,7 +103,6 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 	 */
 	private BinarySearchTreeNode<T> search(BinarySearchTreeNode<T> node, T data) {
 		int cmp = data.compareTo(node.data);
-		System.out.println(cmp);
 		if(cmp < 0) {
 			return search(node.left, data);
 		}
@@ -118,7 +119,20 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 	 * @return det totala antalet noder i det (sub)träd som noden utgör root i.
 	 */
 	public int size() {
-		return 0;
+		int size = 0;
+		size += sizeCalculator(this, size);
+
+		return size;
+	}
+	
+	private int sizeCalculator(BinarySearchTreeNode<T> node, int siz) {
+		int size = siz+1;
+//		System.out.println("Current node is: " + node.data + " : the size = " + size);
+		if(node.left != null)
+			size = sizeCalculator(node.left, size);
+		if(node.right != null)
+			size = sizeCalculator(node.right, size);
+		return size;
 	}
 
 	/**
@@ -127,7 +141,30 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 	 * @return djupet.
 	 */
 	public int depth() {
-		return -1;
+		int leftDep = 0, rightDep = 0;
+		if(left != null)
+			leftDep = depthCalculator(this.left, 1);
+		if(right != null)
+			rightDep = depthCalculator(this.right, 1);
+		return Math.max(leftDep, rightDep);
+	}
+	
+	private int depthCalculator(BinarySearchTreeNode<T> node, int dep) {
+		int depth = dep+1;
+//		System.out.println("Current node is: " + node.data + " : depth = " + depth);
+		int leftDep = dep;
+		int rightDep = dep;
+		if(node.left != null)
+			leftDep = depthCalculator(node.left, leftDep+1);
+		if(node.right != null)
+			rightDep = depthCalculator(node.right, rightDep+1);
+		
+//		System.out.println("Left depth: " + leftDep);
+//		System.out.println("Right Depth: " + rightDep);
+		
+		return Math.max(leftDep, rightDep);
+
+		
 	}
 
 	/**
@@ -138,6 +175,27 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 	 * @return strängrepresentationen för det (sub)träd som noden utgör root i.
 	 */
 	public String toString() {
-		return "";
+		String sb = "";
+		sb += buildString(this, sb);
+		return sb;
+	}
+	
+	
+	private String buildString(BinarySearchTreeNode<T> node, String sb) {
+		if(node.left != null) {
+			sb = buildString(node.left, sb);
+			sb += ", ";
+		}
+		
+		sb += node.data.toString();
+
+		
+
+		if(node.right != null) {
+			sb += ", ";
+			sb = buildString(node.right, sb);
+		}
+		
+		return sb;
 	}
 }

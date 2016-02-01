@@ -10,6 +10,7 @@ import static org.junit.Assert.*;
 public class BinarySearchTreeTester {
 
 	private BinarySearchTree<Integer> tree = new BinarySearchTree<Integer>();
+	private BinarySearchTree<Integer> tree2 = new BinarySearchTree<Integer>();
 
 	@Test
 	public void testEmptyTree() {
@@ -29,6 +30,15 @@ public class BinarySearchTreeTester {
 		tree.add(6);
 		tree.add(1);
 	}
+	
+	@Before
+	public void setUp2() throws Exception {
+		tree2.add(10);
+		tree2.add(5);
+		tree2.add(2);
+		tree2.add(6);
+		tree2.add(8);
+	}
 
 	@Test
 	public void testAddUnique() {
@@ -37,34 +47,39 @@ public class BinarySearchTreeTester {
 		}
 	}
 
-//	@Test
-//	public void testSize() {
-//		assertEquals(6, tree.size());
-//	}
-//
-//	@Test
-//	public void testDepth() {
-//		assertEquals(3, tree.depth());
-//	}
-//
-//	@Test
-//	public void testToString() {
-//		assertEquals("[1, 2, 3, 4, 5, 6]", tree.toString());
-//	}
-//
-//	@Test
-//	public void testAddDuplicates() {
-//		for (int n = 1; n <= 6; n += 2)
-//			assertFalse(tree.add(n));
-//	}
-//
-//	@Test
-//	public void testRemoveExistingLeaf() {
-//		assertTrue(tree.remove(1));
-//		assertEquals(5, tree.size());
-//		assertEquals("[2, 3, 4, 5, 6]", tree.toString());
-//	}
-//
+	@Test
+	public void testSize() {
+		assertEquals(6, tree.size());
+	}
+
+	@Test
+	public void testDepth() {
+		assertEquals(3, tree.depth());
+	}
+	
+	@Test
+	public void testDepth2() {
+		assertEquals(3, tree2.depth());
+	}
+
+	@Test
+	public void testToString() {
+		assertEquals("[1, 2, 3, 4, 5, 6]", tree.toString());
+	}
+
+	@Test
+	public void testAddDuplicates() {
+		for (int n = 1; n <= 6; n += 2)
+			assertFalse(tree.add(n));
+	}
+
+	@Test
+	public void testRemoveExistingLeaf() {
+		assertTrue(tree.remove(1));
+		assertEquals(5, tree.size());
+		assertEquals("[2, 3, 4, 5, 6]", tree.toString());
+	}
+
 //	@Test
 //	public void testRemoveExistingMiddleItemWithEmptyRightChild() {
 //		assertTrue(tree.remove(4));
