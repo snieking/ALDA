@@ -2,6 +2,8 @@ package alda.tree;
 
 import java.util.stream.IntStream;
 
+import org.w3c.dom.Node;
+
 /**
  * Denna klass representerar noderna i ett binärt säkträd utan dubletter.
  * 
@@ -55,6 +57,15 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 		} else
 			return false;
 	}
+	
+	private void addLostBranch(BinarySearchTreeNode<T> branch, BinarySearchTreeNode<T> root) {
+		if(branch.left != null)
+			addLostBranch(branch.left, root);
+		if(branch.right != null)
+			addLostBranch(branch.right, root);
+		
+		root.add(branch.data);
+	}
 
 	/**
 	 * Privat hjälpmetod som är till nytta vid borttag. Ni behöver inte
@@ -75,7 +86,91 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 	 * @return en referens till nodens subträd efter borttaget.
 	 */
 	public BinarySearchTreeNode<T> remove(T data) {
-		return null;
+		BinarySearchTreeNode<T> theRoot = this;
+
+		theRoot = checkRoot(theRoot, data);
+
+		findLeftNodeBefore(theRoot, data, this);
+
+		findRightNodeBefore(theRoot, data, this);
+		return theRoot;
+	}
+	
+	private BinarySearchTreeNode<T> checkRoot(BinarySearchTreeNode<T> root, T data) {
+//		System.out.println("Current node: " + root.data + " :: Searching for: " + data);
+		if(root.data == data) {
+			if(root.left != null) {
+				System.out.println("[ROOT] Removing: " + data);
+				BinarySearchTreeNode<T> rootRight = root.right;
+				root = root.left;
+				root.addLostBranch(rootRight, root);
+			}
+			else if(root.right != null) {
+				root = root.right;
+			}
+		}
+		
+		return root;
+	}
+	
+	private BinarySearchTreeNode<T> findLeftNodeBefore(BinarySearchTreeNode<T> node, T data, BinarySearchTreeNode<T> root) {
+//		System.out.println("Current node: " + node.data + " :: Searching for: " + data);
+		int cmp;
+		if(node.left != null) {
+			cmp = data.compareTo(node.left.data);
+			if(cmp < 0) {
+				return findLeftNodeBefore(node.left, data, root);
+			}else if(cmp > 0) {
+				if(node.right != null) // TODO: Remove??
+					return findLeftNodeBefore(node.right, data, root);
+			}else if(cmp == 0) {
+				System.out.println("[LEFT] Next is: " + node.left.data + " :: found a match");
+				BinarySearchTreeNode<T> tempRight = node.left.right;
+				BinarySearchTreeNode<T> toBeRemoved = node.left;
+				System.out.println("[LEFT] Removing: " + toBeRemoved.data);
+				node.left = node.left.left;
+				
+				if(tempRight != null)
+					root.addLostBranch(tempRight, root);
+
+				return root;
+			}
+		}
+		
+
+		
+		return root;
+	}
+	
+	private BinarySearchTreeNode<T> findRightNodeBefore(BinarySearchTreeNode<T> node, T data, BinarySearchTreeNode<T> root) {
+//		System.out.println("Current node: " + node.data + " :: Searching for: " + data);
+		int cmp;
+		
+		
+
+		if(node.right != null) {
+			cmp = data.compareTo(node.right.data);
+			if(cmp < 0 && node.left != null)
+				return findRightNodeBefore(node.left, data, root);
+			else if(cmp > 0 && node.right != null)
+				return findRightNodeBefore(node.right, data, root);
+			else if(cmp == 0) {
+				System.out.println("[RIGHT] Next is: " + node.right.data + " :: found a match");
+				BinarySearchTreeNode<T> tempLeft = node.right.left;
+				BinarySearchTreeNode<T> toBeRemoved = node.right;
+				System.out.println("[RIGHT] Removing: " + toBeRemoved.data);
+				node.right = node.right.right;
+				
+//				if(tempLeft != null && node.right != null)
+//					node.right.left = tempLeft;
+				if(tempLeft != null)
+					root.addLostBranch(tempLeft, root);
+				
+				return root;
+			}
+		}
+		
+		return root;
 	}
 
 	/**
@@ -104,13 +199,15 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 	private BinarySearchTreeNode<T> search(BinarySearchTreeNode<T> node, T data) {
 		int cmp = data.compareTo(node.data);
 		if(cmp < 0) {
-			return search(node.left, data);
+			if(node.left != null) // TODO: Remove??
+				return search(node.left, data);
 		}
 		else if(cmp > 0) {
-			return search(node.right, data);
+			if(node.right != null) // TODO: Remove??
+				return search(node.right, data);
 		}
-		else
-			return node;
+		
+		return node;
 	}
 
 	/**
@@ -150,7 +247,6 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 	}
 	
 	private int depthCalculator(BinarySearchTreeNode<T> node, int dep) {
-		int depth = dep+1;
 //		System.out.println("Current node is: " + node.data + " : depth = " + depth);
 		int leftDep = dep;
 		int rightDep = dep;
