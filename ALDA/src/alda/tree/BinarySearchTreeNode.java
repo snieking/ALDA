@@ -100,16 +100,12 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 	 * @return 
 	 */
 	private BinarySearchTreeNode<T> search(BinarySearchTreeNode<T> node, T data) {
-		System.out.println("Searching for: " + data);
-		System.out.println("This nodes data: " + node.data);
 		int cmp = data.compareTo(node.data);
 		System.out.println(cmp);
 		if(cmp < 0) {
-			System.out.println("Det var mindre!");
 			return search(node.left, data);
 		}
 		else if(cmp > 0) {
-			System.out.println("Det var större!");
 			return search(node.right, data);
 		}
 		else
