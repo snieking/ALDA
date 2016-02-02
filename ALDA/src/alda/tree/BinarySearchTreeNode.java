@@ -66,6 +66,10 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 		
 		root.add(branch.data);
 	}
+	
+	String printData() {
+		return data.toString();
+	}
 
 	/**
 	 * Privat hjälpmetod som är till nytta vid borttag. Ni behöver inte
@@ -73,8 +77,22 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 	 * 
 	 * @return det minsta elementet i det (sub)träd som noden utgör root i.
 	 */
-	private T findMin() {
-		return null;
+	
+	private BinarySearchTreeNode<T> findMin(BinarySearchTreeNode<T> node) {
+		if(node.left.left != null)
+			return findMin(node.left);
+		else
+			return node;
+	}
+	
+	private BinarySearchTreeNode<T> findNodeBeforeMin(BinarySearchTreeNode<T> node) {
+		if(node.right != null) {
+			if(node.right.left != null)
+				return findMin(node.right);
+			else
+				return node;
+		}
+		return node;
 	}
 
 	/**
@@ -87,90 +105,150 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 	 */
 	public BinarySearchTreeNode<T> remove(T data) {
 		BinarySearchTreeNode<T> theRoot = this;
+//		System.out.println("Root is: " + theRoot.printData());
+//		System.out.println(theRoot);
 
 		theRoot = checkRoot(theRoot, data);
-
-		findLeftNodeBefore(theRoot, data, this);
-
-		findRightNodeBefore(theRoot, data, this);
+		
+		checkNormal(theRoot, data, theRoot);
+//		findLeftNodeBefore(theRoot, data, theRoot);
+//
+//		findRightNodeBefore(theRoot, data, theRoot);
+//		System.out.println("returing root");
+//		System.out.println("Root after removes is: " + theRoot.printData());
+//		System.out.println(theRoot);
 		return theRoot;
 	}
 	
-	private BinarySearchTreeNode<T> checkRoot(BinarySearchTreeNode<T> root, T data) {
-//		System.out.println("Current node: " + root.data + " :: Searching for: " + data);
+	private BinarySearchTreeNode<T> checkSubRoot(BinarySearchTreeNode<T> root, T data) {
 		if(root.data == data) {
-			if(root.left != null) {
-				System.out.println("[ROOT] Removing: " + data);
-				BinarySearchTreeNode<T> rootRight = root.right;
-				root = root.left;
-				root.addLostBranch(rootRight, root);
-			}
-			else if(root.right != null) {
-				root = root.right;
+//			System.out.println("Rätt data :-)");
+			BinarySearchTreeNode<T> tempLeft = root.left;
+			BinarySearchTreeNode<T> temp = findNodeBeforeMin(root);
+			
+			if(root.data == temp.data) {
+//				System.out.println("root.data == temp.data");
+				BinarySearchTreeNode<T> tempRight = null;
+				if(root.right != null)
+					tempRight = root.right;
+				
+				BinarySearchTreeNode<T> newRoot;
+				//newRoot = temp.right;
+				if(temp.right != null) {
+//					System.out.println("temp.right blire");
+					newRoot = temp.right;
+//					System.out.println("nya subrooten är: " + newRoot);
+					if(tempLeft != null) {
+//						System.out.println("lägger till tempLeft: " + tempLeft);
+						newRoot.left = tempLeft;
+					}
+//					if(tempRight != null) {
+//						System.out.println("lägger till tempRight: " + tempRight);
+//						newRoot.right = tempRight;
+//					}
+				} else
+					newRoot = temp.left;
+//				System.out.println("Slutgiltiga subrooten: " + newRoot);
+				return newRoot;
 			}
 		}
 		
 		return root;
 	}
 	
-	private BinarySearchTreeNode<T> findLeftNodeBefore(BinarySearchTreeNode<T> node, T data, BinarySearchTreeNode<T> root) {
-//		System.out.println("Current node: " + node.data + " :: Searching for: " + data);
-		int cmp;
-		if(node.left != null) {
-			cmp = data.compareTo(node.left.data);
-			if(cmp < 0) {
-				return findLeftNodeBefore(node.left, data, root);
-			}else if(cmp > 0) {
-				if(node.right != null) // TODO: Remove??
-					return findLeftNodeBefore(node.right, data, root);
-			}else if(cmp == 0) {
-				System.out.println("[LEFT] Next is: " + node.left.data + " :: found a match");
-				BinarySearchTreeNode<T> tempRight = node.left.right;
-				BinarySearchTreeNode<T> toBeRemoved = node.left;
-				System.out.println("[LEFT] Removing: " + toBeRemoved.data);
-				node.left = node.left.left;
+	private BinarySearchTreeNode<T> checkRoot(BinarySearchTreeNode<T> root, T data) {
+		if(root.data == data) {
+//			System.out.println("Det är rätt data...");
+			BinarySearchTreeNode<T> tempLeft = root.left;
+			BinarySearchTreeNode<T> temp = findNodeBeforeMin(root);
+//			System.out.println("Vill replaca med: " + temp.data);
+			
+			if(root.data == temp.data) {
+//				System.out.println("root.data == temp.data");
+				BinarySearchTreeNode<T> tempRight;
+				if(root.right != null)
+					tempRight = root.right.right;
+				else
+					tempRight = null;
 				
-				if(tempRight != null)
-					root.addLostBranch(tempRight, root);
-
-				return root;
+				System.out.println();
+				
+				BinarySearchTreeNode<T> newRoot;
+				if(temp.right != null) {
+					newRoot = temp.right;
+					if(tempLeft != null)
+						newRoot.left = tempLeft;
+					if(tempRight != null)
+						newRoot.right = tempRight;
+				} else
+					newRoot = temp.left;
+				
+				return newRoot;
+			}
+			else {
+				BinarySearchTreeNode<T> newRoot = temp.left;
+				temp.left = null;
+				BinarySearchTreeNode<T> tempRight = temp;
+				newRoot.left = tempLeft;
+				newRoot.right = tempRight;
+				return newRoot;
 			}
 		}
 		
-
-		
+//		System.out.println("Not in root...");
 		return root;
 	}
 	
-	private BinarySearchTreeNode<T> findRightNodeBefore(BinarySearchTreeNode<T> node, T data, BinarySearchTreeNode<T> root) {
-//		System.out.println("Current node: " + node.data + " :: Searching for: " + data);
+	private BinarySearchTreeNode<T> checkNormal(BinarySearchTreeNode<T> node, T data, BinarySearchTreeNode<T> root) {
 		int cmp;
-		
-		
-
-		if(node.right != null) {
-			cmp = data.compareTo(node.right.data);
-			if(cmp < 0 && node.left != null)
-				return findRightNodeBefore(node.left, data, root);
-			else if(cmp > 0 && node.right != null)
-				return findRightNodeBefore(node.right, data, root);
-			else if(cmp == 0) {
-				System.out.println("[RIGHT] Next is: " + node.right.data + " :: found a match");
-				BinarySearchTreeNode<T> tempLeft = node.right.left;
-				BinarySearchTreeNode<T> toBeRemoved = node.right;
-				System.out.println("[RIGHT] Removing: " + toBeRemoved.data);
-				node.right = node.right.right;
+//		System.out.println("nytt varv i checknormal");
+		cmp = data.compareTo(node.data);
+		System.out.println("cmp är nu = " + cmp);
+		if(cmp < 0) {
+			if(node.left != null) {
+				System.out.println("Ska kolla LEFT :: Current node: " + node.data);
+				cmp = data.compareTo(node.left.data);
+				System.out.println("cmp = " + cmp + " :: left = " + node.left + " :: right = " + node.right);
+				if(cmp < 0 && node.left != null) {
+					System.out.println("Går left");
+					return checkNormal(node.left, data, root);
+				} else if(cmp > 0 && node.right != null) {
+					System.out.println("Går right");
+//					if(node.right != null) // TODO: Remove?
+						return checkNormal(node.right, data, root);
+				} else if(cmp == 0) {
+					System.out.println("[LEFT] Det matchar!");
+					BinarySearchTreeNode<T> newSubRoot = checkSubRoot(node.left, data);
+					node.left = newSubRoot;
+					
+					return root;
+				}
 				
-//				if(tempLeft != null && node.right != null)
-//					node.right.left = tempLeft;
-				if(tempLeft != null)
-					root.addLostBranch(tempLeft, root);
 				
-				return root;
+			} 
+		} else if (cmp > 0) {
+			if(node.right != null) {
+				System.out.println("Ska kolla RIGHT :: Current node: " + node.data);
+				cmp = data.compareTo(node.right.data);
+				if(cmp < 0 && node.left != null) {
+					System.out.println("Går left");
+					return checkNormal(node.left, data, root);
+				} else if(cmp > 0 && node.right != null) {
+//					if(node.right != null) // TODO: Remove?
+					System.out.println("Går right");
+						return checkNormal(node.right, data, root);
+				} else if(cmp == 0) {
+					System.out.println("[RIGHT] Det matchar!");
+					BinarySearchTreeNode<T> newSubRoot = checkSubRoot(node.right, data);
+					node.right = newSubRoot;
+					
+					return root;
+				}
 			}
 		}
 		
-		return root;
+		System.out.println("Fail... Returnerar: " + node.data);
+		return checkSubRoot(node, data);
 	}
 
 	/**
@@ -218,13 +296,11 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 	public int size() {
 		int size = 0;
 		size += sizeCalculator(this, size);
-
 		return size;
 	}
 	
 	private int sizeCalculator(BinarySearchTreeNode<T> node, int siz) {
 		int size = siz+1;
-//		System.out.println("Current node is: " + node.data + " : the size = " + size);
 		if(node.left != null)
 			size = sizeCalculator(node.left, size);
 		if(node.right != null)

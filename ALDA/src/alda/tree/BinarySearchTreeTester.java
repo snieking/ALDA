@@ -1,5 +1,6 @@
 package alda.tree;
 
+import java.util.Collection;
 import java.util.Random;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -33,53 +34,80 @@ public class BinarySearchTreeTester {
 	
 	@Before
 	public void setUp2() throws Exception {
-		tree2.add(10);
 		tree2.add(5);
+		tree2.add(4);
 		tree2.add(2);
+		tree2.add(3);
 		tree2.add(6);
-		tree2.add(8);
-	}
-
-	@Test
-	public void testAddUnique() {
-		for (int n = 1; n <= 6; n++) {
-			assertTrue(tree.contains(n));
-		}
-	}
-
-	@Test
-	public void testSize() {
-		assertEquals(6, tree.size());
-	}
-
-	@Test
-	public void testDepth() {
-		assertEquals(3, tree.depth());
+		tree2.add(1);
 	}
 	
-	@Test
-	public void testDepth2() {
-		assertEquals(3, tree2.depth());
-	}
+//	@Test
+//	public void impossibleTest() {
+//		SortedSet<Integer> oracle = new TreeSet<Integer>();
+//		for (int n = 1; n <= 6; n++)
+//			oracle.add(n);
+//		
+//		assertEquals(oracle.add(4), tree2.add(4));
+//		assertEquals(oracle.size(), tree2.size());
+//		assertEquals(oracle.remove(8), tree2.remove(8));
+//		assertEquals(oracle.add(0), tree2.add(0));
+//		assertEquals(oracle.size(), tree2.size());
+//		assertEquals(oracle.remove(1), tree2.remove(1));
+//		assertEquals(oracle.add(4), tree2.add(4));
+//		assertEquals(oracle.size(), tree2.size());
+//		assertEquals(oracle.remove(6), tree2.remove(6));
+//		assertEquals(oracle.add(0), tree2.add(0));
+//		assertEquals(oracle.size(), tree2.size());
+//		assertEquals(oracle.remove(3), tree2.remove(3));
+//	}
 
+//	@Test
+//	public void testAddUnique() {
+//		for (int n = 1; n <= 6; n++) {
+//			assertTrue(tree.contains(n));
+//		}
+//	}
+//
+//	@Test
+//	public void testSize() {
+//		assertEquals(6, tree.size());
+//	}
+//
+//	@Test
+//	public void testDepth() {
+//		assertEquals(3, tree.depth());
+//	}
+//	
+//	@Test
+//	public void testDepth2() {
+//		assertEquals(3, tree2.depth());
+//	}
+//
+//	@Test
+//	public void testToString() {
+//		assertEquals("[1, 2, 3, 4, 5, 6]", tree.toString());
+//	}
+//
+//	@Test
+//	public void testAddDuplicates() {
+//		for (int n = 1; n <= 6; n += 2)
+//			assertFalse(tree.add(n));
+//	}
+//
+//	@Test
+//	public void testRemoveExistingLeaf() {
+//		assertTrue(tree.remove(1));
+//		assertEquals(5, tree.size());
+//		assertEquals("[2, 3, 4, 5, 6]", tree.toString());
+//	}
 	@Test
-	public void testToString() {
-		assertEquals("[1, 2, 3, 4, 5, 6]", tree.toString());
-	}
-
-	@Test
-	public void testAddDuplicates() {
-		for (int n = 1; n <= 6; n += 2)
-			assertFalse(tree.add(n));
-	}
-
-	@Test
-	public void testRemoveExistingLeaf() {
-		assertTrue(tree.remove(1));
+	public void testRemoveExistingLeaf2() {
+		assertTrue(tree.remove(3));
 		assertEquals(5, tree.size());
-		assertEquals("[2, 3, 4, 5, 6]", tree.toString());
+		assertEquals("[1, 2, 4, 5, 6]", tree.toString());
 	}
-
+//
 //	@Test
 //	public void testRemoveExistingMiddleItemWithEmptyRightChild() {
 //		assertTrue(tree.remove(4));
@@ -107,6 +135,7 @@ public class BinarySearchTreeTester {
 //		assertTrue(tree.remove(5));
 //		assertEquals(5, tree.size());
 //		assertEquals("[1, 2, 3, 4, 6]", tree.toString());
+//		System.out.println(tree);
 //	}
 //
 //	@Test
@@ -116,20 +145,28 @@ public class BinarySearchTreeTester {
 //		SortedSet<Integer> oracle = new TreeSet<Integer>();
 //		for (int n = 1; n <= 6; n++)
 //			oracle.add(n);
+//		
 //
 //		for (int n = 0; n < 1000; n++) {
+//			System.out.println("Varv: " + n);
 //			int toAdd = rnd.nextInt(10);
+//			System.out.println("Adding: " + toAdd);
 //			assertEquals(oracle.add(toAdd), tree.add(toAdd));
 //			int toRemove = rnd.nextInt(10);
+//			System.out.println("[JUNIT] Will remove: " + toRemove + "Size from root: " + tree.size());
 //			assertEquals(oracle.remove(toRemove), tree.remove(toRemove));
+//			System.out.println("[JUNIT] After remove");
 //			int checkExists = rnd.nextInt(10);
-//			assertEquals(oracle.contains(checkExists), tree
-//					.contains(checkExists));
+//			assertEquals(oracle.contains(checkExists), 
+//					tree.contains(checkExists));
 //			assertEquals(oracle.size(), tree.size());
 //			assertEquals(oracle.toString(), tree.toString());
+//			System.out.println("--- Oracle size: " + oracle.size() + " :: Tree size: " + tree.size() + " ---");
+//			System.out.println("*** Tree root is: " + tree.toString() + " ***");
+//			System.out.println("*** Oracle root is: " + oracle.toString() + " ***");
 //		}
 //	}
-//
+
 //	@Test
 //	public void testOtherType(){
 //		BinarySearchTree<String> stringTree = new BinarySearchTree<String>();
