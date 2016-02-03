@@ -1,25 +1,11 @@
 package alda.tree;
 
-import java.util.stream.IntStream;
-
-import org.w3c.dom.Node;
-
 /**
- * Denna klass representerar noderna i ett binärt säkträd utan dubletter.
+ * Vår implementation av ett binärt sökträd,
+ * där allt görs rekursivt.
  * 
- * Detta är den enda av de tre klasserna ni ska göra några ändringar i. (Om ni
- * inte vill lägga till fler testfall.) De ändringar som är tillåtna är dock
- * begränsade av fäljande regler:
- * <ul>
- * <li>Ni får INTE lägga till några fler instansvariabler.
- * <li>Ni får INTE lägga till några statiska variabler.
- * <li>Ni får INTE använda några loopar någonstans.
- * <li>Ni Får lägga till fler metoder, dessa ska då vara privata.
- * </ul>
- * 
- * @author henrikbe
- * 
- * @param <T>
+ * @author Viktor Plane - viktorplane.sonie@gmail.com
+ * @author Olof Hofstedt - olof.hofstedt93@gmail.com
  */
 public class BinarySearchTreeNode<T extends Comparable<T>> {
 
@@ -57,19 +43,6 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 		} else
 			return false;
 	}
-	
-	private void addLostBranch(BinarySearchTreeNode<T> branch, BinarySearchTreeNode<T> root) {
-		if(branch.left != null)
-			addLostBranch(branch.left, root);
-		if(branch.right != null)
-			addLostBranch(branch.right, root);
-		
-		root.add(branch.data);
-	}
-	
-	String printData() {
-		return data.toString();
-	}
 
 	/**
 	 * Privat hjälpmetod som är till nytta vid borttag. Ni behöver inte
@@ -77,7 +50,6 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 	 * 
 	 * @return det minsta elementet i det (sub)träd som noden utgör root i.
 	 */
-	
 	private BinarySearchTreeNode<T> findMin(BinarySearchTreeNode<T> node) {
 		if(node.left.left != null)
 			return findMin(node.left);
@@ -85,6 +57,14 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 			return node;
 	}
 	
+	/**
+	 * Privat rekursiv hjälpmetod som används för att hitta noden innan det lägsta värdet,
+	 * som checkRoot använder som hjälp när den ska flytta om i trädet.
+	 * 
+	 * @param node
+	 *             som den ska leta vidare i.
+	 * @return den lägsta noden.
+	 */
 	private BinarySearchTreeNode<T> findNodeBeforeMin(BinarySearchTreeNode<T> node) {
 		if(node.right != null) {
 			if(node.right.left != null)
@@ -99,103 +79,51 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 	 * Tar bort ett element ur trädet. Om elementet inte existerar så lämnas
 	 * trädet oförändrat.
 	 * 
-	 * @param data
-	 *            elementet som ska tas bort ur trädet.
-	 * @return en referens till nodens subträd efter borttaget.
+	 * @param data 
+	 *             elementet som ska tas bort ur trädet.
+	 * @return en referens till nodens subträd med eller utan borttagning.
 	 */
 	public BinarySearchTreeNode<T> remove(T data) {
 		BinarySearchTreeNode<T> theRoot = this;
-		System.out.println("Root is: " + theRoot.printData());
-//		System.out.println(theRoot);
-
-		theRoot = checkRoot(theRoot, data);
-		
-		checkNormal(theRoot, data, theRoot);
-//		findLeftNodeBefore(theRoot, data, theRoot);
-//
-//		findRightNodeBefore(theRoot, data, theRoot);
-//		System.out.println("returing root");
-//		System.out.println("Root after removes is: " + theRoot.printData());
-//		System.out.println(theRoot);
+		theRoot = checkRoot(this, data);
+		checkNormal(theRoot, data);
 		return theRoot;
 	}
 	
-	private BinarySearchTreeNode<T> checkSubRoot(BinarySearchTreeNode<T> root, T data) {
-		if(root.data == data) {
-			System.out.println("Rätt data :-)");
-			BinarySearchTreeNode<T> tempLeft = root.left;
-			BinarySearchTreeNode<T> temp = findNodeBeforeMin(root);
-			System.out.println("Root: " + root.data);
-			System.out.println("Temp: " + temp.data);
-			
-			
-			if(root.data == temp.data) {
-				System.out.println("root.data == temp.data");
-				BinarySearchTreeNode<T> tempRight = null;
-				if(root.right != null)
-					tempRight = root.right;
-				
-				BinarySearchTreeNode<T> newRoot;
-				//newRoot = temp.right;
-				if(temp.right != null) {
-//					System.out.println("temp.right blire");
-					newRoot = temp.right;
-//					System.out.println("nya subrooten är: " + newRoot);
-					if(tempLeft != null) {
-//						System.out.println("lägger till tempLeft: " + tempLeft);
-						newRoot.left = tempLeft;
-					}
-//					if(tempRight != null) {
-//						System.out.println("lägger till tempRight: " + tempRight);
-//						newRoot.right = tempRight;
-//					}
-				} else
-					newRoot = temp.left;
-//				System.out.println("Slutgiltiga subrooten: " + newRoot);
-				return newRoot;
-			}
-			//if(root.left != null) {
-				System.out.println("Här är jag");
-				BinarySearchTreeNode<T> nodeBefore = findNodeBeforeMin(root);
-				BinarySearchTreeNode<T> replacementRoot;
-				if(nodeBefore.right != null) {
-					replacementRoot = nodeBefore.right;
-					nodeBefore.right = null;
-				} else {
-					replacementRoot = nodeBefore.left;
-					nodeBefore.left = null;
-				}
-				
-				replacementRoot.left = root.left;
-				replacementRoot.right = root.right;
-				return replacementRoot;
-				
-//			}
-//			System.out.println("Här är jag nu...");
-//			temp.left = tempLeft;
-//			temp.right = root.right; // TODO: remove?
-//			return temp;
-		}
-		
-		return root;
+	/**
+	 * Privat rekursiv hjälpmetod som hittar det mest högra värdet under noden.
+	 * 
+	 * @param node 
+	 *             som den ska leta under.
+	 * @return mest högra noden.
+	 */
+	private BinarySearchTreeNode<T> findMostRight(BinarySearchTreeNode<T> node) {
+		if(node.right != null)
+			return findMostRight(node.right);
+		else
+			return node;
 	}
 	
+	/**
+	 * Privat hjälpmetod för remove som kollar och jämför en root/subroot och byter platser ifall ändring sker.
+	 * 
+	 * @param root 
+	 *             noden som den ska kolla.
+	 * @param data 
+	 *             som noden ska jämföras med.
+	 * @return den nya rooten/subrooten.
+	 */
 	private BinarySearchTreeNode<T> checkRoot(BinarySearchTreeNode<T> root, T data) {
 		if(root.data == data) {
-			System.out.println("Det är rätt data... [checkRoot]");
 			BinarySearchTreeNode<T> tempLeft = root.left;
 			BinarySearchTreeNode<T> temp = findNodeBeforeMin(root);
-//			System.out.println("Vill replaca med: " + temp.data);
-			
+
 			if(root.data == temp.data) {
-				System.out.println("root.data == temp.data");
 				BinarySearchTreeNode<T> tempRight;
 				if(root.right != null)
 					tempRight = root.right.right;
 				else
 					tempRight = null;
-				
-				System.out.println();
 				
 				BinarySearchTreeNode<T> newRoot;
 				if(temp.right != null) {
@@ -210,89 +138,65 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 				return newRoot;
 			}
 			else {
-				System.out.println("här i checkRoot");
-				BinarySearchTreeNode<T> newRoot = temp.left;
+				/* Sätter newRoot till det lägsta värdet  på höger sidan */
+				BinarySearchTreeNode<T> newRoot = temp.left; 
+
+				/* Tar bort kopplingen till nya rooten */
 				temp.left = null;
-				BinarySearchTreeNode<T> tempRight = root.right;
+				
+				/* Letar upp det högsta värdet från nya rooten och lägger till värdet som
+					var innan. */ 
+				findMostRight(newRoot).right = root.right;
+				
+				/* Sätter nya rootens left till vänster av ursprungliga root */
 				newRoot.left = tempLeft;
-				newRoot.right = tempRight;
 				return newRoot;
 			}
 		}
 		
-//		System.out.println("Not in root...");
 		return root;
 	}
 	
-	private BinarySearchTreeNode<T> checkNormal(BinarySearchTreeNode<T> node, T data, BinarySearchTreeNode<T> root) {
+	/**
+	 * Privat rekursiv hjälpmetod för remove som används för att kolla en vanlig nod, 
+	 * d.v.s. inte root noden, och den kallar på checkRoot för att göra ändringar på 
+	 * subroots ifall data matchar.
+	 * 
+	 * @param node 
+	 *             som den börjar att titta på. 
+	 * @param data 
+	 * 			   att leta efter.
+	 */
+	private void checkNormal(BinarySearchTreeNode<T> node, T data) {
 		int cmp;
-//		System.out.println("nytt varv i checknormal");
-		cmp = data.compareTo(node.data);
-		System.out.println("cmp är nu = " + cmp);
-//		if(cmp < 0) {
+		if(node != null) {
+			cmp = data.compareTo(node.data);
+
 			if(node.left != null || node.right != null) {
-				System.out.println("Ska kolla LEFT :: Current node: " + node.data);
 				cmp = data.compareTo(node.data);
 				if(node.right != null && node.right.data == data) {
-					System.out.println("Right cmp");
 					cmp = data.compareTo(node.right.data);
 				}
 				else if(node.left != null && node.left.data == data) {
-					System.out.println("Left cmp");
 					cmp = data.compareTo(node.left.data);
 				}
-				System.out.println("cmp = " + cmp + " :: left = " + node.left + " :: right = " + node.right);
 				if(cmp < 0 && node.left != null) {
-					System.out.println("Går left");
-					return checkNormal(node.left, data, root);
+					checkNormal(node.left, data); //
 				} else if(cmp > 0 && node.right != null) {
-					System.out.println("Går right!!");
-//					if(node.right != null) // TODO: Remove?
-						return checkNormal(node.right, data, root);
+						checkNormal(node.right, data); //
 				} else if(cmp == 0) {
-					System.out.println("[LEFT] Det matchar! Står just nu på: " + node.data);
 					BinarySearchTreeNode<T> newSubRoot;
 					if(node.left != null && node.left.data == data) {
-						System.out.println("In left...");
-						newSubRoot = checkSubRoot(node.left, data);
+						newSubRoot = checkRoot(node.left, data);
 						node.left = newSubRoot;
 					}
 					else {
-						System.out.println("In right...");
-						newSubRoot = checkSubRoot(node.right, data);
+						newSubRoot = checkRoot(node.right, data);
 						node.right = newSubRoot;
-						System.out.println(node.right);
 					}
-
-					
-					return root;
 				}
-				
-				
-			} 
-//		} else if (cmp > 0) {
-//			if(node.right != null) {
-//				System.out.println("Ska kolla RIGHT :: Current node: " + node.data);
-//				cmp = data.compareTo(node.right.data);
-//				if(cmp < 0 && node.left != null) {
-//					System.out.println("Går left");
-//					return checkNormal(node.left, data, root);
-//				} else if(cmp > 0 && node.right != null) {
-////					if(node.right != null) // TODO: Remove?
-//					System.out.println("Går right");
-//						return checkNormal(node.right, data, root);
-//				} else if(cmp == 0) {
-//					System.out.println("[RIGHT] Det matchar!");
-//					BinarySearchTreeNode<T> newSubRoot = checkSubRoot(node.right, data);
-//					node.right = newSubRoot;
-//					
-//					return root;
-//				}
-//			}
-//		}
-		
-		System.out.println("Fail... Returnerar: " + node.data);
-		return node;
+			}
+		}
 	}
 
 	/**
@@ -312,20 +216,20 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 	}
 	
 	/**
-	 * En hjälpmetod som används rekursivt vid contains för att leta upp elementet.
+	 * En privat hjälpmetod som används rekursivt vid contains för att leta upp elementet.
 	 * 
 	 * @param node
 	 *            nästa node den ska leta i
-	 * @return 
+	 * @return noden som har samma data som contains elementet ifall det finns, annars rooten.
 	 */
 	private BinarySearchTreeNode<T> search(BinarySearchTreeNode<T> node, T data) {
 		int cmp = data.compareTo(node.data);
 		if(cmp < 0) {
-			if(node.left != null) // TODO: Remove??
+			if(node.left != null)
 				return search(node.left, data);
 		}
 		else if(cmp > 0) {
-			if(node.right != null) // TODO: Remove??
+			if(node.right != null)
 				return search(node.right, data);
 		}
 		
@@ -343,6 +247,14 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 		return size;
 	}
 	
+	/**
+	 * Privat rekursiv hjälpmetod för size som räknar ut storleken.
+	 * @param node
+	 * 			   som den börjar räkna ifrån.
+	 * @param siz
+	 *            storleken som en int.
+	 * @return
+	 */
 	private int sizeCalculator(BinarySearchTreeNode<T> node, int siz) {
 		int size = siz+1;
 		if(node.left != null)
@@ -354,6 +266,7 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 
 	/**
 	 * Det högsta djupet i det (sub)träd som noden utgör root i.
+	 * Metoden använder sig av Math.max för att välja den djupaste vägen.
 	 * 
 	 * @return djupet.
 	 */
@@ -366,8 +279,18 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 		return Math.max(leftDep, rightDep);
 	}
 	
+	/**
+	 * Privat hjälpmetod för depth som används för att göra den faktiska uträkningen.
+	 * Går rekursivt neråt så långt det går från den ursprungliga noden. Metoden använder
+	 * sig av Math.max för att välja den djupaste vägen.
+	 * 
+	 * @param node
+	 *             noden den ska klättra neråt från.
+	 * @param dep
+	 * 			  storleken på djupet som en int.
+	 * @return
+	 */
 	private int depthCalculator(BinarySearchTreeNode<T> node, int dep) {
-//		System.out.println("Current node is: " + node.data + " : depth = " + depth);
 		int leftDep = dep;
 		int rightDep = dep;
 		if(node.left != null)
@@ -375,12 +298,7 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 		if(node.right != null)
 			rightDep = depthCalculator(node.right, rightDep+1);
 		
-//		System.out.println("Left depth: " + leftDep);
-//		System.out.println("Right Depth: " + rightDep);
-		
 		return Math.max(leftDep, rightDep);
-
-		
 	}
 
 	/**
@@ -396,17 +314,20 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 		return sb;
 	}
 	
-	
+	/**
+	 * Privat hjälpmetod för toString som rekursivt tar fram alla följande noder.
+	 * @param node
+	 * 			   som den kollar från.
+	 * @param sb
+	 * 			 vilket är strängen.
+	 * @return
+	 */
 	private String buildString(BinarySearchTreeNode<T> node, String sb) {
 		if(node.left != null) {
 			sb = buildString(node.left, sb);
 			sb += ", ";
 		}
-		
 		sb += node.data.toString();
-
-		
-
 		if(node.right != null) {
 			sb += ", ";
 			sb = buildString(node.right, sb);

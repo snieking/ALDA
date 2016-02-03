@@ -34,12 +34,12 @@ public class BinarySearchTreeTester {
 	
 	@Before
 	public void setUp2() throws Exception {
-		tree2.add(5);
-		tree2.add(4);
-		tree2.add(2);
-		tree2.add(3);
-		tree2.add(6);
 		tree2.add(1);
+		tree2.add(6);
+		tree2.add(3);
+		tree2.add(2);
+		tree2.add(4);
+		tree2.add(5);
 	}
 	
 	@Before
@@ -53,7 +53,7 @@ public class BinarySearchTreeTester {
 	}
 	
 	@Test
-	public void imptest3() {
+	public void additionalRemoveTest1() {
 		SortedSet<Integer> oracle = new TreeSet<Integer>();
 		oracle.add(8);
 		oracle.add(7);
@@ -61,14 +61,21 @@ public class BinarySearchTreeTester {
 		oracle.add(4);
 		oracle.add(9);
 		oracle.add(5);
+		
 		assertEquals(oracle.size(), tree3.size());
 		assertEquals(oracle.add(5), tree3.add(5)); // 0
 		assertEquals(oracle.remove(0), tree3.remove(0));
 		assertEquals(oracle.size(), tree3.size());
+		
+		int checkContains = 8;
+		assertEquals(oracle.contains(checkContains), 
+		tree3.contains(checkContains));
+		assertEquals(oracle.size(), tree3.size());
+		assertEquals(oracle.toString(), tree3.toString());
 	}
 	
 	@Test
-	public void imptest1() {
+	public void additionalRemoveTest2() {
 			SortedSet<Integer> oracle = new TreeSet<Integer>();
 			for (int n = 1; n <= 6; n++)
 				oracle.add(n);
@@ -92,13 +99,18 @@ public class BinarySearchTreeTester {
 			assertEquals(oracle.remove(4), tree2.remove(4));
 			
 			assertEquals(oracle.add(8), tree2.add(8)); // 6
-			System.out.println("***");
-			System.out.println();
 			assertEquals(oracle.remove(6), tree2.remove(6));
+			
+			int checkContains = 9;
+			assertEquals(oracle.contains(checkContains), 
+			tree2.contains(checkContains));
+			assertEquals(oracle.size(), tree2.size());
+			assertEquals(oracle.toString(), tree2.toString());
+			
 	}
 	
 	@Test
-	public void imptest4() {
+	public void additionalRemoveTest3() {
 			SortedSet<Integer> oracle = new TreeSet<Integer>();
 			for (int n = 1; n <= 6; n++)
 				oracle.add(n);
@@ -110,17 +122,19 @@ public class BinarySearchTreeTester {
 			assertEquals(oracle.remove(4), tree2.remove(4));
 			
 			assertEquals(oracle.add(7), tree2.add(7)); // 2
-			System.out.println("***");
-			System.out.println();
 			assertEquals(oracle.remove(6), tree2.remove(6));
 			
-			
+			int checkContains = 9;
+			assertEquals(oracle.contains(checkContains), 
+			tree2.contains(checkContains));
+			assertEquals(oracle.size(), tree2.size());
+			assertEquals(oracle.toString(), tree2.toString());
 
 	}
 	
 	
 	@Test
-	public void impossibleTest() {
+	public void additionalRemoveTest4() {
 		SortedSet<Integer> oracle = new TreeSet<Integer>();
 		for (int n = 1; n <= 6; n++)
 			oracle.add(n);
@@ -152,17 +166,101 @@ public class BinarySearchTreeTester {
 		assertEquals(oracle.add(1), tree2.add(1)); // 8
 		assertEquals(oracle.remove(8), tree2.remove(8));
 		
-		
 		assertEquals(oracle.add(6), tree2.add(6)); // 9
-		System.out.println("***");
-		System.out.println("***");
 		assertEquals(oracle.remove(6), tree2.remove(6));
 		
-		
+		int checkContains = 9;
+		assertEquals(oracle.contains(checkContains), 
+		tree2.contains(checkContains));
+		assertEquals(oracle.size(), tree2.size());
+		assertEquals(oracle.toString(), tree2.toString());
 	}
 	
 	@Test
-	public void impTest2() {
+	public void additionalRemoveTest5() {
+		SortedSet<Integer> oracle = new TreeSet<Integer>();
+		for (int n = 1; n <= 6; n++)
+			oracle.add(n);
+		
+		assertEquals(oracle.add(6), tree2.add(6)); // 0
+		assertEquals(oracle.remove(1), tree2.remove(1));
+		assertEquals(oracle.toString(), tree2.toString());
+		
+		assertEquals(oracle.add(8), tree2.add(8)); // 1
+		assertEquals(oracle.remove(3), tree2.remove(3));
+		assertEquals(oracle.toString(), tree2.toString());
+		
+		assertEquals(oracle.add(2), tree2.add(2)); // 2
+		assertEquals(oracle.remove(5), tree2.remove(5));
+		assertEquals(oracle.toString(), tree2.toString());
+		
+		assertEquals(oracle.add(9), tree2.add(9)); // 3
+		assertEquals(oracle.remove(9), tree2.remove(9));
+		assertEquals(oracle.toString(), tree2.toString());
+		
+		assertEquals(oracle.add(9), tree2.add(9)); // 4
+		assertEquals(oracle.remove(3), tree2.remove(3));
+		assertEquals(oracle.toString(), tree2.toString());
+		
+		assertEquals(oracle.add(9), tree2.add(9)); // 5
+		assertEquals(oracle.remove(8), tree2.remove(8));
+		assertEquals(oracle.toString(), tree2.toString());
+		
+		assertEquals(oracle.add(3), tree2.add(3)); // 6
+		assertEquals(oracle.remove(0), tree2.remove(0));
+		assertEquals(oracle.toString(), tree2.toString());
+		
+		assertEquals(oracle.add(9), tree2.add(9)); // 7
+		assertEquals(oracle.remove(8), tree2.remove(8));
+		assertEquals(oracle.toString(), tree2.toString());
+		
+		assertEquals(oracle.add(1), tree2.add(1)); // 8
+		assertEquals(oracle.remove(4), tree2.remove(4));
+		assertEquals(oracle.toString(), tree2.toString());
+		
+		assertEquals(oracle.add(5), tree2.add(5)); // 9
+		assertEquals(oracle.remove(1), tree2.remove(1));
+		assertEquals(oracle.toString(), tree2.toString());
+		
+		assertEquals(oracle.add(1), tree2.add(1)); // 10
+		assertEquals(oracle.remove(3), tree2.remove(3));
+		assertEquals(oracle.toString(), tree2.toString());
+		
+		assertEquals(oracle.add(2), tree2.add(2)); // 11
+		assertEquals(oracle.remove(6), tree2.remove(6));
+		assertEquals(oracle.toString(), tree2.toString());
+		
+		assertEquals(oracle.add(3), tree2.add(3)); // 12
+		assertEquals(oracle.remove(7), tree2.remove(7));
+		assertEquals(oracle.toString(), tree2.toString());
+		
+		assertEquals(oracle.add(4), tree2.add(4)); // 13
+		assertEquals(oracle.remove(8), tree2.remove(8));
+		assertEquals(oracle.toString(), tree2.toString());
+		
+		assertEquals(oracle.add(7), tree2.add(7)); // 14
+		assertEquals(oracle.remove(8), tree2.remove(8));
+		assertEquals(oracle.toString(), tree2.toString());
+		
+		assertEquals(oracle.add(4), tree2.add(4)); // 15
+		assertEquals(oracle.remove(3), tree2.remove(3));
+		assertEquals(oracle.toString(), tree2.toString());
+		
+		assertEquals(oracle.add(1), tree2.add(1)); // 16
+		assertEquals(oracle.remove(2), tree2.remove(2));
+		assertEquals(oracle.toString(), tree2.toString());
+		
+		assertEquals(oracle.size(), tree2.size());
+		
+		int checkContains = 9;
+		assertEquals(oracle.contains(checkContains), 
+		tree2.contains(checkContains));
+		assertEquals(oracle.size(), tree2.size());
+		assertEquals(oracle.toString(), tree2.toString());
+	}
+	
+	@Test
+	public void additionalRemoveTest6() {
 		SortedSet<Integer> oracle = new TreeSet<Integer>();
 		for (int n = 1; n <= 6; n++)
 			oracle.add(n);
@@ -192,12 +290,122 @@ public class BinarySearchTreeTester {
 		assertEquals(oracle.remove(2), tree2.remove(2));
 		
 		assertEquals(oracle.add(7), tree2.add(7)); // 8
-		System.out.println("***");
-		System.out.println("***");
+
 		assertEquals(oracle.remove(5), tree2.remove(5));
 		
 		assertEquals(oracle.size(), tree.size());
+		
+		int checkContains = 9;
+		assertEquals(oracle.contains(checkContains), 
+		tree2.contains(checkContains));
+		assertEquals(oracle.size(), tree2.size());
 
+		assertEquals(oracle.toString(), tree2.toString());
+
+	}
+	
+	@Test
+	public void additionalRemoveTest7() {
+		SortedSet<Integer> oracle = new TreeSet<Integer>();
+		for (int n = 1; n <= 6; n++)
+			oracle.add(n);
+		
+		int toAdd = 8;
+		int toRemove = 8;
+		assertEquals(oracle.add(toAdd), tree2.add(toAdd)); // 0
+		assertEquals(oracle.remove(toRemove), tree2.remove(toRemove));
+		assertEquals(oracle.size(), tree2.size());
+		assertEquals(oracle.contains(toAdd), 
+		tree2.contains(toAdd));
+		
+		toAdd = 2;
+		toRemove = 8;
+		assertEquals(oracle.add(toAdd), tree2.add(toAdd)); // 1
+		assertEquals(oracle.remove(toRemove), tree2.remove(toRemove));
+		assertEquals(oracle.size(), tree2.size());
+		assertEquals(oracle.contains(toAdd), 
+		tree2.contains(toAdd));
+		
+		toAdd = 6;
+		toRemove = 2;
+		assertEquals(oracle.add(toAdd), tree2.add(toAdd)); // 2
+		assertEquals(oracle.remove(toRemove), tree2.remove(toRemove));
+		assertEquals(oracle.size(), tree2.size());
+		assertEquals(oracle.contains(toAdd), 
+		tree2.contains(toAdd));
+		
+		toAdd = 8;
+		toRemove = 6;
+		assertEquals(oracle.add(toAdd), tree2.add(toAdd)); // 3
+		assertEquals(oracle.remove(toRemove), tree2.remove(toRemove));
+		assertEquals(oracle.size(), tree2.size());
+		assertEquals(oracle.contains(toAdd), 
+		tree2.contains(toAdd));
+		
+		toAdd = 2;
+		toRemove = 2;
+		assertEquals(oracle.add(toAdd), tree2.add(toAdd)); // 4
+		assertEquals(oracle.remove(toRemove), tree2.remove(toRemove));
+		assertEquals(oracle.size(), tree2.size());
+		assertEquals(oracle.contains(toAdd), 
+		tree2.contains(toAdd));
+		
+		toAdd = 2;
+		toRemove = 0;
+		assertEquals(oracle.add(toAdd), tree2.add(toAdd)); // 5
+		assertEquals(oracle.remove(toRemove), tree2.remove(toRemove));
+		assertEquals(oracle.size(), tree2.size());
+		assertEquals(oracle.contains(toAdd), 
+		tree2.contains(toAdd));
+		
+		toAdd = 7;
+		toRemove = 1;
+		assertEquals(oracle.add(toAdd), tree2.add(toAdd)); // 6
+		assertEquals(oracle.remove(toRemove), tree2.remove(toRemove));
+		assertEquals(oracle.size(), tree2.size());
+		assertEquals(oracle.contains(toAdd), 
+		tree2.contains(toAdd));
+		
+		toAdd = 5;
+		toRemove = 0;
+		assertEquals(oracle.add(toAdd), tree2.add(toAdd)); // 7
+		assertEquals(oracle.remove(toRemove), tree2.remove(toRemove));
+		assertEquals(oracle.size(), tree2.size());
+		assertEquals(oracle.contains(toAdd), 
+		tree2.contains(toAdd));
+		
+		toAdd = 6;
+		toRemove = 1;
+		assertEquals(oracle.add(toAdd), tree2.add(toAdd)); // 8
+		assertEquals(oracle.remove(toRemove), tree2.remove(toRemove));
+		assertEquals(oracle.size(), tree2.size());
+		assertEquals(oracle.contains(toAdd), 
+		tree2.contains(toAdd));
+		
+		toAdd = 6;
+		toRemove = 9;
+		assertEquals(oracle.add(toAdd), tree2.add(toAdd)); // 9
+		assertEquals(oracle.remove(toRemove), tree2.remove(toRemove));
+		assertEquals(oracle.size(), tree2.size());
+		assertEquals(oracle.contains(toAdd), 
+		tree2.contains(toAdd));
+		
+		toAdd = 4;
+		toRemove = 1;
+		assertEquals(oracle.add(toAdd), tree2.add(toAdd)); // 10
+		assertEquals(oracle.remove(toRemove), tree2.remove(toRemove));
+		assertEquals(oracle.size(), tree2.size());
+		assertEquals(oracle.contains(toAdd), 
+		tree2.contains(toAdd));
+		
+		toAdd = 7;
+		toRemove = 5;
+
+		assertEquals(oracle.add(toAdd), tree2.add(toAdd)); // 11
+		assertEquals(oracle.remove(toRemove), tree2.remove(toRemove));
+		assertEquals(oracle.size(), tree2.size());
+		assertEquals(oracle.contains(toAdd), 
+		tree2.contains(toAdd));
 	}
 
 	@Test
@@ -215,11 +423,6 @@ public class BinarySearchTreeTester {
 	@Test
 	public void testDepth() {
 		assertEquals(3, tree.depth());
-	}
-	
-	@Test
-	public void testDepth2() {
-		assertEquals(3, tree2.depth());
 	}
 
 	@Test
@@ -274,7 +477,6 @@ public class BinarySearchTreeTester {
 		assertTrue(tree.remove(5));
 		assertEquals(5, tree.size());
 		assertEquals("[1, 2, 3, 4, 6]", tree.toString());
-		System.out.println(tree);
 	}
 
 	@Test
@@ -286,35 +488,16 @@ public class BinarySearchTreeTester {
 			oracle.add(n);
 		
 
-		for (int n = 0; n < 1000; n++) {
-			System.out.println("^^^^^^^^ Varv: " + n + " ^^^^^^^^^");
+		for (int n = 0; n < 500000; n++) {
 			int toAdd = rnd.nextInt(10);
-			System.out.println("Adding: " + toAdd);
 			assertEquals(oracle.add(toAdd), tree.add(toAdd));
 			int toRemove = rnd.nextInt(10);
-			System.out.println("[JUNIT] Will remove: " + toRemove + " - Size from root: " + tree.size());
-			System.out.println("Oracle atm: ");
-			System.out.println(oracle.toString());
-			System.out.println("**********");
-			System.out.println("Tree atm: ");
-			System.out.println(tree.toString());
-			System.out.println("**********");
 			assertEquals(oracle.remove(toRemove), tree.remove(toRemove));
-			System.out.println("[JUNIT] After remove");
-			System.out.println("Oracle atm: ");
-			System.out.println(oracle.toString());
-			System.out.println("**********");
-			System.out.println("Tree atm: ");
-			System.out.println(tree.toString());
-			System.out.println("**********");
 			int checkExists = rnd.nextInt(10);
 			assertEquals(oracle.contains(checkExists), 
-					tree.contains(checkExists)); //TODO: Returnerar true ibland, fast falskt
-			assertEquals(oracle.size(), tree.size()); //TODO: Returnerar fel
+					tree.contains(checkExists));
+			assertEquals(oracle.size(), tree.size());
 			assertEquals(oracle.toString(), tree.toString());
-			System.out.println("--- Oracle size: " + oracle.size() + " :: Tree size: " + tree.size() + " ---");
-			System.out.println("*** Tree root is: " + tree.toString() + " ***");
-			System.out.println("*** Oracle root is: " + oracle.toString() + " ***");
 		}
 	}
 
