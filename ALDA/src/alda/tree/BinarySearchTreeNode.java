@@ -97,9 +97,9 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 	 *             som den ska leta under.
 	 * @return mest högra noden.
 	 */
-	private BinarySearchTreeNode<T> findMostRight(BinarySearchTreeNode<T> node) {
+	private BinarySearchTreeNode<T> findMax(BinarySearchTreeNode<T> node) {
 		if(node.right != null)
-			return findMostRight(node.right);
+			return findMax(node.right);
 		else
 			return node;
 	}
@@ -146,7 +146,7 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 				
 				/* Letar upp det högsta värdet från nya rooten och lägger till värdet som
 					var innan. */ 
-				findMostRight(newRoot).right = root.right;
+				findMax(newRoot).right = root.right;
 				
 				/* Sätter nya rootens left till vänster av ursprungliga root */
 				newRoot.left = tempLeft;
