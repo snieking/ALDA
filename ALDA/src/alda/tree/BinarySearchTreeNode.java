@@ -1,7 +1,8 @@
 package alda.tree;
 
 /**
- * Vår implementation av ett binärt sökträd,
+ * <h1> Binärt sökträd </h1>
+ * En implementation av ett binärt sökträd,
  * där allt görs rekursivt.
  * 
  * @author Viktor Plane - viktorplane.sonie@gmail.com
@@ -21,9 +22,8 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 	 * Lägger till en nod i det binära sökträdet. Om noden redan existerar så
 	 * lämnas trädet oförändrat.
 	 * 
-	 * @param data
-	 *            datat för noden som ska läggas till.
-	 * @return true om en ny nod lades till trädet.
+	 * @param data 		för noden som ska läggas till.
+	 * @return <code>true</code> om en ny nod lades till trädet. Annars <code>false</code>
 	 */
 	public boolean add(T data) {
 		int cmp = data.compareTo(this.data);
@@ -45,9 +45,11 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 	}
 
 	/**
-	 * Privat hjälpmetod som är till nytta vid borttag. Ni behöver inte
-	 * skriva/utnyttja denna metod om ni inte vill.
+	 * Privat hjälpmetod som är till nytta vid borttag.
+	 * Letar upp det lägsta elementet i sub(trädet) som noden utgör root i.
+	 * Vilket är tänkt att ta den borttagna rootens plats.
 	 * 
+	 * @param node 		vilket utgör rooten i (sub)trädet.
 	 * @return det minsta elementet i det (sub)träd som noden utgör root i.
 	 */
 	private BinarySearchTreeNode<T> findMin(BinarySearchTreeNode<T> node) {
@@ -61,8 +63,7 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 	 * Privat rekursiv hjälpmetod som används för att hitta noden innan det lägsta värdet,
 	 * som checkRoot använder som hjälp när den ska flytta om i trädet.
 	 * 
-	 * @param node
-	 *             som den ska leta vidare i.
+	 * @param node 		som den ska leta vidare i.
 	 * @return den lägsta noden.
 	 */
 	private BinarySearchTreeNode<T> findNodeBeforeMin(BinarySearchTreeNode<T> node) {
@@ -79,8 +80,7 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 	 * Tar bort ett element ur trädet. Om elementet inte existerar så lämnas
 	 * trädet oförändrat.
 	 * 
-	 * @param data 
-	 *             elementet som ska tas bort ur trädet.
+	 * @param data 		elementet som ska tas bort ur trädet.
 	 * @return en referens till nodens subträd med eller utan borttagning.
 	 */
 	public BinarySearchTreeNode<T> remove(T data) {
@@ -92,10 +92,10 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 	
 	/**
 	 * Privat rekursiv hjälpmetod som hittar det mest högra värdet under noden.
+	 * Användbart vid borttagning.
 	 * 
-	 * @param node 
-	 *             som den ska leta under.
-	 * @return mest högra noden.
+	 * @param node 		som den ska leta under.
+	 * @return node		vilket är den mest högra.
 	 */
 	private BinarySearchTreeNode<T> findMax(BinarySearchTreeNode<T> node) {
 		if(node.right != null)
@@ -107,11 +107,9 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 	/**
 	 * Privat hjälpmetod för remove som kollar och jämför en root/subroot och byter platser ifall ändring sker.
 	 * 
-	 * @param root 
-	 *             noden som den ska kolla.
-	 * @param data 
-	 *             som noden ska jämföras med.
-	 * @return den nya rooten/subrooten.
+	 * @param root 		som utgör noden som den ska kolla.
+	 * @param data 		som noden ska jämföras med.
+	 * @return newRoot 	vilket är den nya rooten/subrooten.
 	 */
 	private BinarySearchTreeNode<T> checkRoot(BinarySearchTreeNode<T> root, T data) {
 		if(root.data == data) {
@@ -162,10 +160,8 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 	 * d.v.s. inte root noden, och den kallar på checkRoot för att göra ändringar på 
 	 * subroots ifall data matchar.
 	 * 
-	 * @param node 
-	 *             som den börjar att titta på. 
-	 * @param data 
-	 * 			   att leta efter.
+	 * @param node 		som den börjar att titta på. 
+	 * @param data 		att leta efter.
 	 */
 	private void checkNormal(BinarySearchTreeNode<T> node, T data) {
 		int cmp;
@@ -203,10 +199,9 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 	 * Kontrollerar om ett givet element finns i det (sub)träd som noden utgör
 	 * root i.
 	 * 
-	 * @param data
-	 *            det sökta elementet.
-	 * @return true om det sökta elementet finns i det (sub)träd som noden utgör
-	 *         root i.
+	 * @param data 		det sökta elementet.
+	 * @return <code>true</code> om det sökta elementet finns i det (sub)träd som noden utgör
+	 *         root i. Om det inte existerar så returneras <code>false</code>
 	 */
 	public boolean contains(T data) {
 		if(search(this, data).data == data)
@@ -218,9 +213,8 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 	/**
 	 * En privat hjälpmetod som används rekursivt vid contains för att leta upp elementet.
 	 * 
-	 * @param node
-	 *            nästa node den ska leta i
-	 * @return noden som har samma data som contains elementet ifall det finns, annars rooten.
+	 * @param node		den nästa den ska leta under.
+	 * @return node 	som har samma data som contains elementet ifall det finns, annars rooten.
 	 */
 	private BinarySearchTreeNode<T> search(BinarySearchTreeNode<T> node, T data) {
 		int cmp = data.compareTo(node.data);
@@ -249,10 +243,9 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 	
 	/**
 	 * Privat rekursiv hjälpmetod för size som räknar ut storleken.
-	 * @param node
-	 * 			   som den börjar räkna ifrån.
-	 * @param siz
-	 *            storleken som en int.
+	 * 
+	 * @param node 		som den börjar räkna ifrån.
+	 * @param size		räknaren som en int.
 	 * @return
 	 */
 	private int sizeCalculator(BinarySearchTreeNode<T> node, int siz) {
@@ -284,10 +277,8 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 	 * Går rekursivt neråt så långt det går från den ursprungliga noden. Metoden använder
 	 * sig av Math.max för att välja den djupaste vägen.
 	 * 
-	 * @param node
-	 *             noden den ska klättra neråt från.
-	 * @param dep
-	 * 			  storleken på djupet som en int.
+	 * @param node		noden den ska klättra neråt från.
+	 * @param dep		storleken på djupet som en int.
 	 * @return
 	 */
 	private int depthCalculator(BinarySearchTreeNode<T> node, int dep) {
@@ -316,23 +307,21 @@ public class BinarySearchTreeNode<T extends Comparable<T>> {
 	
 	/**
 	 * Privat hjälpmetod för toString som rekursivt tar fram alla följande noder.
-	 * @param node
-	 * 			   som den kollar från.
-	 * @param sb
-	 * 			 vilket är strängen.
+	 * @param node 		som den kollar från.
+	 * @param sb		den nuvarande strängen.
 	 * @return
 	 */
-	private String buildString(BinarySearchTreeNode<T> node, String sb) {
+	private String buildString(BinarySearchTreeNode<T> node, String string) {
 		if(node.left != null) {
-			sb = buildString(node.left, sb);
-			sb += ", ";
+			string = buildString(node.left, string);
+			string += ", ";
 		}
-		sb += node.data.toString();
+		string += node.data.toString();
 		if(node.right != null) {
-			sb += ", ";
-			sb = buildString(node.right, sb);
+			string += ", ";
+			string = buildString(node.right, string);
 		}
 		
-		return sb;
+		return string;
 	}
 }
