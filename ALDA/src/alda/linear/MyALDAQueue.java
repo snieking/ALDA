@@ -174,7 +174,6 @@ public class MyALDAQueue<E> implements Iterable<E>, ALDAQueue<E> {
 
 		int timesMoved = 0;
 		Node<E> compareNode = new Node<E>(e);
-
 		Node<E> backupHead = head;
 		Node<E> backupTail = tail;
 		clear();
