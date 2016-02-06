@@ -5,8 +5,8 @@ package alda.tree;
  * En implementation av ett binärt sökträd,
  * där allt görs rekursivt.
  * 
- * @author Viktor Plane - viktorplane.sonie@gmail.com
- * @author Olof Hofstedt - olof.hofstedt93@gmail.com
+ * @author Viktor Plane - viktorplane.sonie@gmail.com (vipl4364)
+ * @author Olof Hofstedt - olof.hofstedt93@gmail.com (olho8226)
  */
 public class BinarySearchTreeNode<T extends Comparable<T>> {
 
