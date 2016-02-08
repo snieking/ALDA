@@ -84,7 +84,7 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
 			if(rest == 0)
 				return node / dary;
 			else {
-				double dob = node / dary;
+				double dob = node/dary;
 				int index = (int) dob;
 				return index;
 			}
