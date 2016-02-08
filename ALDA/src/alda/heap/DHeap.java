@@ -70,17 +70,28 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
 	 * @return index
 	 */
 	public int parentIndex(int node) {
+		if(node < 2)
+			throw new IllegalArgumentException();
+		
 		int rest = node%dary;
-		System.out.println("Input: " + node + " :: rest: " + rest);
-		if(dary/2 > 1) {
+//		System.out.println("Input: " + node + " :: rest: " + rest);
+		if(dary == 4) {
+//			System.out.println("> 1");
 			if(rest == 0)
 				return node / dary;
 			else {
-				System.out.println(node+rest);
+//				System.out.println(node+rest);
 				return (node+rest) / dary;
 			}
 		}
-		else {
+		else if(dary == 3) {
+			if(rest == 0)
+				return node / dary;
+			else
+				return (node+rest) / dary;
+		}
+		else if(dary == 2){
+//			System.out.println("else");
 			if(rest == 0)
 				return node / dary;
 			else {
@@ -89,6 +100,31 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
 				return index;
 			}
 		}
+		
+		return 0;
+	}
+	
+	public int firstChildIndex(int node) {
+		if(node < 1)
+			throw new IllegalArgumentException();
+		/*
+		int rest = (int)dary/2;
+		System.out.println("Rest: " + rest);
+		return (node*dary) - rest;
+		*/
+			
+		if(dary == 2) {
+			return node*dary;
+		}
+		else if(dary == 3) {
+			return (node*dary) - 1;
+		}
+		else if(dary == 4) {
+			return (node*dary) - 2;
+		}
+		
+		return 0;
+		
 	}
 
 	/**
@@ -99,14 +135,52 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
 	 *            the item to insert.
 	 */
 	public void insert(AnyType x) {
+		System.out.println("Max array length: " + array.length);
 		if (currentSize == array.length - 1)
 			enlargeArray(array.length * 2 + 1);
-
+		
+		System.out.println("CurrentSize: " + currentSize);
+		int siz = currentSize;
 		// Percolate up
 		int hole = ++currentSize;
+		array[hole] = x;
+		percolateUp(hole);
+		
+//		if(siz == 0) {
+////			System.out.println("1: Lägger till på första");
+//			array[1] = x;
+//		}
+//		else if(hole-1 <= dary) {
+////			System.out.println("Fortfarande 4 första platserna");
+//			AnyType temp;
+//			if(x.compareTo(array[parentIndex(hole)]) < 0) {
+//				System.out.println("******");
+//				temp = array[parentIndex(hole)];
+//				array[parentIndex(hole)] = x;
+//				x = temp;
+//			}
+//			array[hole] = x;
+//		}
+//		else if(hole >= 5) {
+//			System.out.println("This way!");
+//			
+//			for(array[2] = x; )
+//			for (array[1] = x; x.compareTo(array[parentIndex(hole)]) < 0; hole = parentIndex(hole))
+//				array[hole] = array[parentIndex(hole)];
+//			array[hole] = x;
+//	}
+		
+		
+		/*
 		for (array[0] = x; x.compareTo(array[hole / 2]) < 0; hole /= 2)
 			array[hole] = array[hole / 2];
 		array[hole] = x;
+		*/
+		
+//		System.out.print("\nEfter insert: ");
+//		for(int i=0; i<currentSize; i++)
+//			System.out.print(array[i] + " ");
+//		System.out.println("\n");
 	}
 
 	private void enlargeArray(int newSize) {
@@ -194,8 +268,29 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
 		}
 		array[hole] = tmp;
 	}
+	
+	private void percolateUp(int hole) {
+		if(hole > 1)
+			if(array[hole].compareTo(array[parentIndex(hole)]) < 0) {
+				AnyType temp = array[parentIndex(hole)];
+				array[parentIndex(hole)] = array[hole];
+				array[hole] = temp;
+				percolateUp(parentIndex(hole));
+			}
+	}
 
+	public AnyType get(int i) {
+		System.out.println("Ska hämta index: '" + i + "', vilket var: " + array[i]);
+//		System.out.println("Nästa är: " + array[i+1]);
+		return array[i];
+	}
+
+	public int size() {
+		return currentSize;
+	}
+	
 	// Test program
+	/*
 	public static void main(String[] args) {
 		int numItems = 10000;
 		DHeap<Integer> h = new DHeap<>();
@@ -207,4 +302,5 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
 			if (h.deleteMin() != i)
 				System.out.println("Oops! " + i);
 	}
+	*/
 }

@@ -69,14 +69,14 @@ public class DHeapTester {
 	
 	@Test
 	public void testParentIndex() {
-		System.out.println("Heap dary is: " + heap.dary);
+//		System.out.println("Heap dary is: " + heap.dary);
 		assertEquals(5, heap.parentIndex(18));
 		assertEquals(5, heap.parentIndex(21));
 		assertEquals(6, heap.parentIndex(22));
 		assertEquals(2, heap.parentIndex(6));
 		assertEquals(1, heap.parentIndex(2));
 		heap = new DHeap<Integer>();
-		System.out.println("Heap dary is: " + heap.dary);
+//		System.out.println("Heap dary is: " + heap.dary);
 		assertEquals(1, heap.parentIndex(2));
 		assertEquals(1, heap.parentIndex(3));
 		assertEquals(4, heap.parentIndex(8));
@@ -84,7 +84,7 @@ public class DHeapTester {
 		assertEquals(6, heap.parentIndex(12));
 		assertEquals(6, heap.parentIndex(13));
 		heap = new DHeap<Integer>(3);
-		System.out.println("Heap dary is: " + heap.dary);
+//		System.out.println("Heap dary is: " + heap.dary);
 		assertEquals(6, heap.parentIndex(17));
 		assertEquals(3, heap.parentIndex(9));
 		assertEquals(4, heap.parentIndex(13));
@@ -95,21 +95,22 @@ public class DHeapTester {
 	 * �ven detta test f�ruts�tter att ni g�r en metod f�r att r�kna ut
 	 * f�r�lderns index och kan ignorerars om ni inte g�r det.
 	 */
-	/*
+	
 	@Test(expected = IllegalArgumentException.class)
 	public void testTooLowParentIndex() {
 		heap.parentIndex(1);
 	}
-	*/
+	
 	/**
 	 * Detta test f�ruts�tter att ni l�gger till en metod i heapen f�r att r�kna
 	 * ut index f�r en nods f�rsta barn. Detta �r inte n�dv�ndigt f�r att l�sa
 	 * uppgiften, s� om ni vill kan ni strunta i testet. Det �r dock inget vi
 	 * rekommenderar eftersom metoden g�r problemet l�ttare att l�sa.
 	 */
-	/*
+	
 	@Test
 	public void testFirstChildIndex() {
+//		System.out.println("heap dary: " + heap.dary);
 		assertEquals(2, heap.firstChildIndex(1));
 		assertEquals(6, heap.firstChildIndex(2));
 		assertEquals(18, heap.firstChildIndex(5));
@@ -127,24 +128,24 @@ public class DHeapTester {
 		assertEquals(17, heap.firstChildIndex(6));
 
 	}
-	*/
+	
 	/**
 	 * �ven detta test f�ruts�tter att ni g�r en metod f�r att r�kna ut det
 	 * f�rsta barnets index och kan ignorerars om ni inte g�r det.
 	 */
-	/*
+	
 	@Test(expected = IllegalArgumentException.class)
 	public void testTooLowChildIndex() {
 		heap.firstChildIndex(0);
 	}
-	*/
-	/*
+	
+	
 	private void testValues(Integer... expected) {
 		assertEquals(expected.length, heap.size());
 		for (int n = 0; n < expected.length; n++)
 			assertEquals(expected[n], heap.get(n + 1));
 	}
-	*/
+	
 
 	/**
 	 * Detta test kr�ver att arrayen i heapen g�rs tillg�nglig via ett par
@@ -159,9 +160,10 @@ public class DHeapTester {
 	 * 
 	 * AnyType get(int index){ return array[index]; }
 	 */
-	/*
+	
 	@Test
 	public void testContent() {
+		System.out.println("testContent()");
 		testValues();
 		heap.insert(17);
 		testValues(17);
@@ -172,6 +174,7 @@ public class DHeapTester {
 		heap.insert(12);
 		testValues(5, 23, 17, 12);
 		heap.insert(100);
+		testValues(5, 23, 17, 12, 100); //TODO: Remove
 		heap.insert(51);
 		heap.insert(52);
 		testValues(5, 23, 17, 12, 100, 51, 52);
@@ -191,5 +194,5 @@ public class DHeapTester {
 		assertEquals(5, (int) heap.deleteMin());
 		testValues(10, 17, 70, 12, 100, 51, 52, 23);
 	}
-	*/
+	
 }
