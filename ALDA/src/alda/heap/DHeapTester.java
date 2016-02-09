@@ -11,6 +11,127 @@ import org.junit.Test;
 public class DHeapTester {
 
 	private DHeap<Integer> heap = new DHeap<Integer>(4);
+	
+	@Test
+	public void testImp3() {
+		PriorityQueue<Integer> oracle = new PriorityQueue<Integer>();
+		assertEquals(oracle.isEmpty(), heap.isEmpty());
+		
+		int tal = 463;
+		heap.insert(tal);
+		oracle.add(tal);
+		
+		tal = 91;
+		heap.insert(tal);
+		oracle.add(tal);
+		
+		tal = 31;
+		heap.insert(tal);
+		oracle.add(tal);
+		
+		tal = 383;
+		heap.insert(tal);
+		oracle.add(tal);
+		
+		assertEquals(oracle.poll(), heap.deleteMin());	
+		assertEquals(oracle.poll(), heap.deleteMin());
+		
+		tal = 215;
+		heap.insert(tal);
+		oracle.add(tal);
+		
+		tal = 488;
+		heap.insert(tal);
+		oracle.add(tal);
+		
+		tal = 781;
+		heap.insert(tal);
+		oracle.add(tal);
+		
+		tal = 797;
+		heap.insert(tal);
+		oracle.add(tal);
+		
+		assertEquals(oracle.poll(), heap.deleteMin());
+		
+		tal = 268;
+		heap.insert(tal);
+		oracle.add(tal);
+		
+		tal = 494;
+		heap.insert(tal);
+		oracle.add(tal);
+		
+		tal = 664;
+		heap.insert(tal);
+		oracle.add(tal);
+
+		assertEquals(oracle.poll(), heap.deleteMin());
+		
+		tal = 790;
+		heap.insert(tal);
+		oracle.add(tal);
+		
+		assertEquals(oracle.poll(), heap.deleteMin());
+		assertEquals(oracle.poll(), heap.deleteMin());
+		
+	}
+	
+	@Test
+	public void testImp() {
+		PriorityQueue<Integer> oracle = new PriorityQueue<Integer>();
+		assertEquals(oracle.isEmpty(), heap.isEmpty());
+		
+		int tal = 127;
+		heap.insert(tal);
+		oracle.add(tal);
+		
+		tal = 510;
+		heap.insert(tal);
+		oracle.add(tal);
+		
+		tal = 979;
+		heap.insert(tal);
+		oracle.add(tal);
+		
+		tal = 103;
+		heap.insert(tal);
+		oracle.add(tal);
+		
+		testValues(103, 510, 979, 127);
+		
+		assertEquals(oracle.poll(), heap.deleteMin());
+		assertEquals(oracle.poll(), heap.deleteMin());
+		assertEquals(oracle.poll(), heap.deleteMin());
+		assertEquals(oracle.poll(), heap.deleteMin());
+	}
+	
+	@Test
+	public void testImp2() {
+		PriorityQueue<Integer> oracle = new PriorityQueue<Integer>();
+		assertEquals(oracle.isEmpty(), heap.isEmpty());
+		
+		int tal = 191;
+		heap.insert(tal);
+		oracle.add(tal);
+		
+		tal = 780;
+		heap.insert(tal);
+		oracle.add(tal);
+		
+		tal = 698;
+		heap.insert(tal);
+		oracle.add(tal);
+		
+		tal = 952;
+		heap.insert(tal);
+		oracle.add(tal);
+		
+		assertEquals(oracle.peek(), heap.findMin());
+		assertEquals(oracle.poll(), heap.deleteMin());
+		assertEquals(oracle.peek(), heap.findMin());
+		assertEquals(oracle.poll(), heap.deleteMin());
+	}
 
 	/**
 	 * Detta test kontrollerar att er kod implementerar en fungerande
@@ -33,6 +154,7 @@ public class DHeapTester {
 			}
 
 			assertEquals(oracle.isEmpty(), heap.isEmpty());
+
 		}
 	}
 
@@ -66,17 +188,14 @@ public class DHeapTester {
 	 * uppgiften, s� om ni vill kan ni strunta i testet. Det �r dock inget vi
 	 * rekommenderar eftersom metoden g�r problemet l�ttare att l�sa.
 	 */
-	
 	@Test
 	public void testParentIndex() {
-//		System.out.println("Heap dary is: " + heap.dary);
 		assertEquals(5, heap.parentIndex(18));
 		assertEquals(5, heap.parentIndex(21));
 		assertEquals(6, heap.parentIndex(22));
 		assertEquals(2, heap.parentIndex(6));
 		assertEquals(1, heap.parentIndex(2));
 		heap = new DHeap<Integer>();
-//		System.out.println("Heap dary is: " + heap.dary);
 		assertEquals(1, heap.parentIndex(2));
 		assertEquals(1, heap.parentIndex(3));
 		assertEquals(4, heap.parentIndex(8));
@@ -84,18 +203,52 @@ public class DHeapTester {
 		assertEquals(6, heap.parentIndex(12));
 		assertEquals(6, heap.parentIndex(13));
 		heap = new DHeap<Integer>(3);
-//		System.out.println("Heap dary is: " + heap.dary);
 		assertEquals(6, heap.parentIndex(17));
 		assertEquals(3, heap.parentIndex(9));
 		assertEquals(4, heap.parentIndex(13));
 		assertEquals(1, heap.parentIndex(3));
+		heap = new DHeap<Integer>(5);
+		assertEquals(1, heap.parentIndex(2));
+		assertEquals(1, heap.parentIndex(3));
+		assertEquals(1, heap.parentIndex(4));
+		assertEquals(1, heap.parentIndex(5));
+		assertEquals(1, heap.parentIndex(6));
+		assertEquals(6, heap.parentIndex(27));
+		assertEquals(6, heap.parentIndex(28));
+		assertEquals(6, heap.parentIndex(29));
+		assertEquals(6, heap.parentIndex(30));
+		assertEquals(6, heap.parentIndex(31));
+		heap = new DHeap<Integer>(6);
+		assertEquals(1, heap.parentIndex(2));
+		assertEquals(1, heap.parentIndex(3));
+		assertEquals(1, heap.parentIndex(4));
+		assertEquals(1, heap.parentIndex(5));
+		assertEquals(1, heap.parentIndex(6));
+		assertEquals(1, heap.parentIndex(7));
+		assertEquals(2, heap.parentIndex(8));
+		assertEquals(2, heap.parentIndex(9));
+		assertEquals(2, heap.parentIndex(10));
+		assertEquals(2, heap.parentIndex(11));
+		assertEquals(2, heap.parentIndex(12));
+		assertEquals(2, heap.parentIndex(13));
+		assertEquals(7, heap.parentIndex(38));
+		assertEquals(7, heap.parentIndex(39));
+		assertEquals(7, heap.parentIndex(40));
+		assertEquals(7, heap.parentIndex(41));
+		assertEquals(7, heap.parentIndex(42));
+		assertEquals(7, heap.parentIndex(43));
+		assertEquals(8, heap.parentIndex(44));
+		assertEquals(8, heap.parentIndex(45));
+		assertEquals(8, heap.parentIndex(46));
+		assertEquals(8, heap.parentIndex(47));
+		assertEquals(8, heap.parentIndex(48));
+		assertEquals(8, heap.parentIndex(49));
 	}
 
 	/**
 	 * �ven detta test f�ruts�tter att ni g�r en metod f�r att r�kna ut
 	 * f�r�lderns index och kan ignorerars om ni inte g�r det.
 	 */
-	
 	@Test(expected = IllegalArgumentException.class)
 	public void testTooLowParentIndex() {
 		heap.parentIndex(1);
@@ -107,10 +260,8 @@ public class DHeapTester {
 	 * uppgiften, s� om ni vill kan ni strunta i testet. Det �r dock inget vi
 	 * rekommenderar eftersom metoden g�r problemet l�ttare att l�sa.
 	 */
-	
 	@Test
 	public void testFirstChildIndex() {
-//		System.out.println("heap dary: " + heap.dary);
 		assertEquals(2, heap.firstChildIndex(1));
 		assertEquals(6, heap.firstChildIndex(2));
 		assertEquals(18, heap.firstChildIndex(5));
@@ -126,7 +277,6 @@ public class DHeapTester {
 		assertEquals(5, heap.firstChildIndex(2));
 		assertEquals(11, heap.firstChildIndex(4));
 		assertEquals(17, heap.firstChildIndex(6));
-
 	}
 	
 	/**
@@ -160,10 +310,8 @@ public class DHeapTester {
 	 * 
 	 * AnyType get(int index){ return array[index]; }
 	 */
-	
 	@Test
 	public void testContent() {
-		System.out.println("testContent()");
 		testValues();
 		heap.insert(17);
 		testValues(17);
@@ -174,7 +322,7 @@ public class DHeapTester {
 		heap.insert(12);
 		testValues(5, 23, 17, 12);
 		heap.insert(100);
-		testValues(5, 23, 17, 12, 100); //TODO: Remove
+		testValues(5, 23, 17, 12, 100);
 		heap.insert(51);
 		heap.insert(52);
 		testValues(5, 23, 17, 12, 100, 51, 52);
@@ -186,7 +334,6 @@ public class DHeapTester {
 		testValues(4, 5, 10, 12, 100, 51, 52, 23, 70, 17);
 		heap.insert(1);
 		testValues(1, 5, 4, 12, 100, 51, 52, 23, 70, 17, 10);
-
 		assertEquals(1, (int) heap.deleteMin());
 		testValues(4, 5, 10, 12, 100, 51, 52, 23, 70, 17);
 		assertEquals(4, (int) heap.deleteMin());

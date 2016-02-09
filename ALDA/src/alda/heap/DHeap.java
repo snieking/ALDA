@@ -1,28 +1,12 @@
 package alda.heap;
 
-//BinaryHeap class
-//
-//CONSTRUCTION: with optional capacity (that defaults to 100)
-//            or an array containing initial items
-//
-//******************PUBLIC OPERATIONS*********************
-//void insert( x )       --> Insert x
-//Comparable deleteMin( )--> Return and remove smallest item
-//Comparable findMin( )  --> Return smallest item
-//boolean isEmpty( )     --> Return true if empty; else false
-//void makeEmpty( )      --> Remove all items
-//******************ERRORS********************************
-//Throws UnderflowException as appropriate
-
 /**
- * Implements a binary heap. Note that all "matching" is based on the compareTo
- * method.
+ * Implements a d-ary heap. 
  * 
- * @author Mark Allen Weiss
+ * @author Viktor Plane (vipl4364) - viktorplane.sonie@gmail.com
+ * @author Olof Hofstedt (olho8226) - olof.hofstedt93@gmail.com 
  */
 public class DHeap<AnyType extends Comparable<? super AnyType>> {
-	
-	int dary = 0;
 
 	/**
 	 * Construct a binary heap or a 2-ary heap.
@@ -73,58 +57,25 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
 		if(node < 2)
 			throw new IllegalArgumentException();
 		
-		int rest = node%dary;
-//		System.out.println("Input: " + node + " :: rest: " + rest);
-		if(dary == 4) {
-//			System.out.println("> 1");
-			if(rest == 0)
-				return node / dary;
-			else {
-//				System.out.println(node+rest);
-				return (node+rest) / dary;
-			}
-		}
-		else if(dary == 3) {
-			if(rest == 0)
-				return node / dary;
-			else
-				return (node+rest) / dary;
-		}
-		else if(dary == 2){
-//			System.out.println("else");
-			if(rest == 0)
-				return node / dary;
-			else {
-				double dob = node/dary;
-				int index = (int) dob;
-				return index;
-			}
-		}
+		int first = (node-1)/dary;
+		double rest = (node-1)%dary;
+		if(rest > 0.50 && rest > 0)
+			first++;
 		
-		return 0;
+		return first;
 	}
 	
 	public int firstChildIndex(int node) {
 		if(node < 1)
 			throw new IllegalArgumentException();
-		/*
-		int rest = (int)dary/2;
-		System.out.println("Rest: " + rest);
-		return (node*dary) - rest;
-		*/
-			
-		if(dary == 2) {
-			return node*dary;
-		}
-		else if(dary == 3) {
-			return (node*dary) - 1;
-		}
-		else if(dary == 4) {
-			return (node*dary) - 2;
-		}
 		
-		return 0;
+		int first = node*dary;
 		
+		int goLeft = 0;
+		for(int i=2; i<dary; i++)
+			goLeft++;
+		
+		return first-goLeft;
 	}
 
 	/**
@@ -135,52 +86,12 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
 	 *            the item to insert.
 	 */
 	public void insert(AnyType x) {
-		System.out.println("Max array length: " + array.length);
 		if (currentSize == array.length - 1)
 			enlargeArray(array.length * 2 + 1);
 		
-		System.out.println("CurrentSize: " + currentSize);
-		int siz = currentSize;
-		// Percolate up
 		int hole = ++currentSize;
 		array[hole] = x;
 		percolateUp(hole);
-		
-//		if(siz == 0) {
-////			System.out.println("1: Lägger till på första");
-//			array[1] = x;
-//		}
-//		else if(hole-1 <= dary) {
-////			System.out.println("Fortfarande 4 första platserna");
-//			AnyType temp;
-//			if(x.compareTo(array[parentIndex(hole)]) < 0) {
-//				System.out.println("******");
-//				temp = array[parentIndex(hole)];
-//				array[parentIndex(hole)] = x;
-//				x = temp;
-//			}
-//			array[hole] = x;
-//		}
-//		else if(hole >= 5) {
-//			System.out.println("This way!");
-//			
-//			for(array[2] = x; )
-//			for (array[1] = x; x.compareTo(array[parentIndex(hole)]) < 0; hole = parentIndex(hole))
-//				array[hole] = array[parentIndex(hole)];
-//			array[hole] = x;
-//	}
-		
-		
-		/*
-		for (array[0] = x; x.compareTo(array[hole / 2]) < 0; hole /= 2)
-			array[hole] = array[hole / 2];
-		array[hole] = x;
-		*/
-		
-//		System.out.print("\nEfter insert: ");
-//		for(int i=0; i<currentSize; i++)
-//			System.out.print(array[i] + " ");
-//		System.out.println("\n");
 	}
 
 	private void enlargeArray(int newSize) {
@@ -212,7 +123,18 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
 
 		AnyType minItem = findMin();
 		array[1] = array[currentSize--];
-		percolateDown(1);
+
+		if(currentSize > dary+1)
+			percolateDown(1);
+
+		else if(currentSize <= dary+1 && currentSize > 1) {
+			int smallest = smallestChild(1);
+			if(array[1].compareTo(array[smallest]) > 0) {
+				AnyType temp = array[1];
+				array[1] = array[smallest];
+				array[smallest] = temp;
+			}
+		}
 
 		return minItem;
 	}
@@ -246,6 +168,19 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
 
 	private int currentSize; // Number of elements in heap
 	private AnyType[] array; // The heap array
+	int dary = 0;
+	
+	private int smallestChild(int node) {
+		int first = firstChildIndex(node);
+		int smallest = first;
+		for(int i=1; i<dary; i++) {
+			if(first+i <= currentSize)
+				if(array[smallest].compareTo(array[first+i]) > 0)
+					smallest = first+i;
+		}
+		
+		return smallest;
+	}
 
 	/**
 	 * Internal method to percolate down in the heap.
@@ -254,19 +189,17 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
 	 *            the index at which the percolate begins.
 	 */
 	private void percolateDown(int hole) {
-		int child;
-		AnyType tmp = array[hole];
-
-		for (; hole * 2 <= currentSize; hole = child) {
-			child = hole * 2;
-			if (child != currentSize && array[child + 1].compareTo(array[child]) < 0)
-				child++;
-			if (array[child].compareTo(tmp) < 0)
-				array[hole] = array[child];
-			else
-				break;
+		while(hole * dary - (dary/2) <= currentSize) {
+			AnyType tmp = array[hole];
+			int smallestChild = smallestChild(hole);
+				
+			if(array[hole].compareTo(array[smallestChild]) > 0) {
+				array[hole] = array[smallestChild];
+				array[smallestChild] = tmp;
+			}
+				
+			hole = smallestChild;
 		}
-		array[hole] = tmp;
 	}
 	
 	private void percolateUp(int hole) {
@@ -280,27 +213,11 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
 	}
 
 	public AnyType get(int i) {
-		System.out.println("Ska hämta index: '" + i + "', vilket var: " + array[i]);
-//		System.out.println("Nästa är: " + array[i+1]);
 		return array[i];
 	}
 
 	public int size() {
 		return currentSize;
 	}
-	
-	// Test program
-	/*
-	public static void main(String[] args) {
-		int numItems = 10000;
-		DHeap<Integer> h = new DHeap<>();
-		int i = 37;
 
-		for (i = 37; i != 0; i = (i + 37) % numItems)
-			h.insert(i);
-		for (i = 1; i < numItems; i++)
-			if (h.deleteMin() != i)
-				System.out.println("Oops! " + i);
-	}
-	*/
 }
