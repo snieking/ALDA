@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import java.util.PriorityQueue;
 import java.util.Random;
 
-import org.junit.Before;
 import org.junit.Test;
 
 public class DHeapTester {
@@ -13,7 +12,7 @@ public class DHeapTester {
 	private DHeap<Integer> heap = new DHeap<Integer>(4);
 	
 	@Test
-	public void testImp3() {
+	public void testInsertAndRemove1() {
 		PriorityQueue<Integer> oracle = new PriorityQueue<Integer>();
 		assertEquals(oracle.isEmpty(), heap.isEmpty());
 		
@@ -78,7 +77,7 @@ public class DHeapTester {
 	}
 	
 	@Test
-	public void testImp() {
+	public void testInsertAndRemove2() {
 		PriorityQueue<Integer> oracle = new PriorityQueue<Integer>();
 		assertEquals(oracle.isEmpty(), heap.isEmpty());
 		
@@ -107,7 +106,7 @@ public class DHeapTester {
 	}
 	
 	@Test
-	public void testImp2() {
+	public void testInsertAndRemove3() {
 		PriorityQueue<Integer> oracle = new PriorityQueue<Integer>();
 		assertEquals(oracle.isEmpty(), heap.isEmpty());
 		
@@ -144,7 +143,7 @@ public class DHeapTester {
 
 		assertEquals(oracle.isEmpty(), heap.isEmpty());
 
-		for (int n = 0; n < 1000; n++) {
+		for (int n = 0; n < 10000000; n++) {
 			int tal = rnd.nextInt(1000);
 			heap.insert(tal);
 			oracle.add(tal);

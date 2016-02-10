@@ -35,19 +35,6 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
 	}
 
 	/**
-	 * Construct the binary heap given an array of items.
-	 */
-	public DHeap(AnyType[] items) {
-		currentSize = items.length;
-		array = (AnyType[]) new Comparable[(currentSize + 2) * 11 / 10];
-
-		int i = 1;
-		for (AnyType item : items)
-			array[i++] = item;
-		buildHeap();
-	}
-
-	/**
 	 * Calculates the index of a nodes parent.
 	 * 
 	 * @param node
@@ -59,7 +46,7 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
 		
 		int first = (node-1)/dary;
 		double rest = (node-1)%dary;
-		if(rest > 0.50 && rest > 0)
+		if(rest > 0)
 			first++;
 		
 		return first;
@@ -123,29 +110,9 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
 
 		AnyType minItem = findMin();
 		array[1] = array[currentSize--];
-
-		if(currentSize > dary+1)
-			percolateDown(1);
-
-		else if(currentSize <= dary+1 && currentSize > 1) {
-			int smallest = smallestChild(1);
-			if(array[1].compareTo(array[smallest]) > 0) {
-				AnyType temp = array[1];
-				array[1] = array[smallest];
-				array[smallest] = temp;
-			}
-		}
-
+		percolateDown(1);
+		
 		return minItem;
-	}
-
-	/**
-	 * Establish heap order property from an arbitrary arrangement of items.
-	 * Runs in linear time.
-	 */
-	private void buildHeap() {
-		for (int i = currentSize / 2; i > 0; i--)
-			percolateDown(i);
 	}
 
 	/**
@@ -165,12 +132,17 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
 	}
 
 	private static final int DEFAULT_CAPACITY = 10;
-
 	private int currentSize; // Number of elements in heap
 	private AnyType[] array; // The heap array
-	int dary = 0;
+	private int dary = 0;
 	
-	private int smallestChild(int node) {
+	/**
+	 * Internal method to find the child with the lowest value.
+	 * 
+	 * @param node
+	 * @return index of the children with the lowest value.
+	 */
+	private int smallestChildIndex(int node) {
 		int first = firstChildIndex(node);
 		int smallest = first;
 		for(int i=1; i<dary; i++) {
@@ -185,13 +157,12 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
 	/**
 	 * Internal method to percolate down in the heap.
 	 * 
-	 * @param hole
-	 *            the index at which the percolate begins.
+	 * @param hole the index at which the percolate begins.
 	 */
 	private void percolateDown(int hole) {
 		while(hole * dary - (dary/2) <= currentSize) {
 			AnyType tmp = array[hole];
-			int smallestChild = smallestChild(hole);
+			int smallestChild = smallestChildIndex(hole);
 				
 			if(array[hole].compareTo(array[smallestChild]) > 0) {
 				array[hole] = array[smallestChild];
@@ -202,6 +173,10 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
 		}
 	}
 	
+	/**
+	 * Internal method to perculate up in the heap.
+	 * @param hole the index at which the percolate begins.
+	 */
 	private void percolateUp(int hole) {
 		if(hole > 1)
 			if(array[hole].compareTo(array[parentIndex(hole)]) < 0) {
@@ -212,10 +187,19 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
 			}
 	}
 
+	/**
+	 * Return node at index provided.
+	 * @param i
+	 * @return node
+	 */
 	public AnyType get(int i) {
 		return array[i];
 	}
 
+	/**
+	 * Returns the current size of the heap.
+	 * @return size
+	 */
 	public int size() {
 		return currentSize;
 	}
