@@ -75,13 +75,13 @@ public class UndirectedGraphTest {
 	// st�rre grafer.
 
 	// @formatter:off
-	// graph G {
-	// A -- A [label=1]; A -- G [label=3]; G -- B [label=28];
-	// B -- F [label=5]; F -- F [label=3]; F -- H [label=1];
-	// H -- D [label=1]; H -- I [label=3]; D -- I [label=1];
-	// B -- D [label=2]; B -- C [label=3]; C -- D [label=5];
-	// E -- C [label=2]; E -- D [label=2]; J -- D [label=5];
-	// }
+//		 graph G {
+//		 A -- A [label=1]; A -- G [label=3]; G -- B [label=28];
+//		 B -- F [label=5]; F -- F [label=3]; F -- H [label=1];
+//		 H -- D [label=1]; H -- I [label=3]; D -- I [label=1];
+//		 B -- D [label=2]; B -- C [label=3]; C -- D [label=5];
+//		 E -- C [label=2]; E -- D [label=2]; J -- D [label=5];
+//		 }
 	// @formatter:on
 
 	private void createExampleGraph() {
@@ -148,35 +148,35 @@ public class UndirectedGraphTest {
 //		testDepthFirstSearch("F", "E", 1);
 //	}
 //
-//	private void testBreadthFirstSearch(String start, String end, int expectedathLength) {
-//		createExampleGraph();
-//		List<String> path = graph.breadthFirstSearch(start, end);
-//
-//		assertEquals(expectedathLength, path.size());
-//
-//		testPath(start, end, path);
-//	}
-//
-//	@Test
-//	public void testBreadthFirstSearchFromAToJ() {
-//		testBreadthFirstSearch("A", "J", 5);
-//	}
-//
-//	@Test
-//	public void testBreadthFirstSearchFromJToA() {
-//		testBreadthFirstSearch("J", "A", 5);
-//	}
-//
-//	@Test
-//	public void testBreadthFirstSearchFromFToE() {
-//		testBreadthFirstSearch("F", "E", 4);
-//	}
-//
-//	@Test
-//	public void testBreadthFirstSearchFromFToF() {
-//		testBreadthFirstSearch("F", "F", 1);
-//	}
-//
+	private void testBreadthFirstSearch(String start, String end, int expectedathLength) {
+		createExampleGraph();
+		List<String> path = graph.breadthFirstSearch(start, end);
+
+		assertEquals(expectedathLength, path.size());
+
+		testPath(start, end, path);
+	}
+
+	@Test
+	public void testBreadthFirstSearchFromAToJ() {
+		testBreadthFirstSearch("A", "J", 5);
+	}
+
+	@Test
+	public void testBreadthFirstSearchFromJToA() {
+		testBreadthFirstSearch("J", "A", 5);
+	}
+
+	@Test
+	public void testBreadthFirstSearchFromFToE() {
+		testBreadthFirstSearch("F", "E", 4);
+	}
+
+	@Test
+	public void testBreadthFirstSearchFromFToF() {
+		testBreadthFirstSearch("F", "F", 1);
+	}
+
 //	@Test
 //	public void testMinimumSpanningTree() {
 //		createExampleGraph();
