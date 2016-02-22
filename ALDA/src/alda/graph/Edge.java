@@ -1,7 +1,7 @@
 package alda.graph;
 
 
-public class Edge<T> {
+public class Edge<T> implements Comparable<Edge<T>>{
 	private Node<T> connection;
 	private int cost;
 	
@@ -20,5 +20,10 @@ public class Edge<T> {
 	
 	public void setCost(int cost) {
 		this.cost = cost;
+	}
+
+	@Override
+	public int compareTo(Edge<T> o) {
+		return this.cost - o.cost;
 	}
 }

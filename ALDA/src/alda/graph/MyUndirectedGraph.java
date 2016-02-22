@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Stack;
 
@@ -199,8 +202,46 @@ public class MyUndirectedGraph<T> implements UndirectedGraph<T> {
 
 	@Override
 	public UndirectedGraph<T> minimumSpanningTree() {
-		// TODO Auto-generated method stub
-		return null;
+		Entry<T, Node<T>> entry=graph.entrySet().iterator().next();
+		T first = entry.getKey();
+		
+		// Börja med ett tomt träd och en tom prioritetskö.
+		UndirectedGraph<T> miniTree = new MyUndirectedGraph<T>();
+		PriorityQueue<Edge<T>> pq = new PriorityQueue<Edge<T>>();
+		
+		// Lägg till första noden i trädet.
+		Node<T> node = new Node<T>(first);
+		miniTree.add(first);
+		node.visited = true;
+		
+		// Lägg till alla bågar som utgår från första i prioritetskön.
+		for(Edge<T> e : graph.get(first).connections) {
+			System.out.println("Added... " + e.getConnection());
+			pq.add(e);
+		}
+		
+		System.out.println("no more...");
+		// Ta ut ur PK den båge som har lägst vikt.
+		Edge<T> edge = pq.poll();
+		
+		while(miniTree.getNumberOfNodes() < getNumberOfNodes()) {
+			// Om noden m inte redan finns i vårat träd. Lägg både noden och bågen.
+			System.out.println("loopie");
+			Node<T> next = edge.getConnection();
+			if(!next.visited) {
+				System.out.println("Adding (" + next.getData() + ")");
+				miniTree.add(next.getData());
+				next.visited = true;
+				node = next;
+			} else {
+				edge = pq.poll();
+			}
+			System.out.println("Graph size: " + miniTree.getNumberOfNodes());
+		}
+		
+		
+		return (UndirectedGraph<T>) miniTree;
+
 	}
 
 }

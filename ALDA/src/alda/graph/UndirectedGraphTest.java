@@ -176,28 +176,29 @@ public class UndirectedGraphTest {
 		testBreadthFirstSearch("F", "F", 1);
 	}
 
-//	@Test
-//	public void testMinimumSpanningTree() {
-//		createExampleGraph();
-//		UndirectedGraph<String> mst = graph.minimumSpanningTree();
-//
-//		int totalEdges = 0;
-//		int totalCost = 0;
-//
-//		for (char node1 = 'A'; node1 <= 'J'; node1++) {
-//			for (char node2 = node1; node2 <= 'J'; node2++) {
-//				int cost = mst.getCost("" + node1, "" + node2);
-//				if (cost > -1) {
-//					totalEdges++;
-//					totalCost += cost;
-//				}
-//			}
-//		}
-//
-//		assertEquals(9, totalEdges);
-//		assertEquals(45, totalCost);
-//	}
-//
+	@Test
+	public void testMinimumSpanningTree() {
+		createExampleGraph();
+		UndirectedGraph<String> mst = graph.minimumSpanningTree();
+		System.out.println("Antalet noder i mst är: " + mst.getNumberOfNodes());
+
+		int totalEdges = 0;
+		int totalCost = 0;
+
+		for (char node1 = 'A'; node1 <= 'J'; node1++) {
+			for (char node2 = node1; node2 <= 'J'; node2++) {
+				int cost = mst.getCost("" + node1, "" + node2);
+				if (cost > -1) {
+					totalEdges++;
+					totalCost += cost;
+				}
+			}
+		}
+
+		assertEquals(9, totalEdges);
+		assertEquals(45, totalCost);
+	}
+
 //	// H�r b�rjar vi anv�nda andra grafer
 //
 //	@Test

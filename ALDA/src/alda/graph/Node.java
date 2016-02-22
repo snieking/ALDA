@@ -27,14 +27,33 @@ public class Node<T> {
 	 * @return least costly edge from the node.
 	 */
 	public Edge<T> leastCostlyEdge() {
-		Edge<T> leastCostly = connections.get(0);
-		for(int i = 1; i<connections.size(); i++) {
+		Edge<T> leastCostly = connections.get(1);
+		leastCostly.getConnection().visited = true;
+		for(int i = 0; i<connections.size(); i++) {
 			Edge<T> next = connections.get(i);
-			if(leastCostly.getCost() > next.getCost())
+			if(leastCostly.getCost() > next.getCost() && !next.getConnection().visited) {
+				System.out.println("Händer detta?");
 				leastCostly = next;
+			}
+			if(!next.getConnection().visited) {
+				next.getConnection().visited = true;	
+				System.out.println("Markerade: " + next.getConnection());
+			}
+		}
+
+		System.out.println("Node är: (" + data + ")" + " - Least costly: (" + leastCostly.getConnection() + ")");
+		return leastCostly;
+	}
+	
+	public boolean hasUnvisitedEdge() {
+		boolean unvisited = false;
+		for(int i=0; i<connections.size(); i++){
+			if(!connections.get(i).getConnection().visited) {
+				unvisited = true;
+			}
 		}
 		
-		return leastCostly;
+		return unvisited;
 	}
 	
 	public boolean addConnection(Node<T> other, int cost) {
