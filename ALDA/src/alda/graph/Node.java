@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 
 public class Node<T> {
-	T data;
+	private T data;
 	boolean visited = false;
 	ArrayList<Edge<T>> connections = new ArrayList<>();
 	
@@ -20,6 +20,21 @@ public class Node<T> {
 			return true;
 		}
 		
+	}
+	
+	/**
+	 * Finds the least costly edge from the node. Is supposed to be used to assist finding the minimal spanning tree.
+	 * @return least costly edge from the node.
+	 */
+	public Edge<T> leastCostlyEdge() {
+		Edge<T> leastCostly = connections.get(0);
+		for(int i = 1; i<connections.size(); i++) {
+			Edge<T> next = connections.get(i);
+			if(leastCostly.getCost() > next.getCost())
+				leastCostly = next;
+		}
+		
+		return leastCostly;
 	}
 	
 	public boolean addConnection(Node<T> other, int cost) {
@@ -95,6 +110,10 @@ public class Node<T> {
 		}
 		
 		return all;
+	}
+	
+	public T getData() {
+		return data;
 	}
 	
 	public String toString() {

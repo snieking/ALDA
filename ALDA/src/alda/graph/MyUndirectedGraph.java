@@ -94,10 +94,10 @@ public class MyUndirectedGraph<T> implements UndirectedGraph<T> {
 		n.checkAndMark();
 		
 		while(!s.isEmpty()) {
-			if(n.data.equals(end)) {
+			if(n.getData().equals(end)) {
 				ArrayList<T> data = new ArrayList<>();
 				for(int i=0; i<s.size(); i++) {
-					data.add(s.pop().data);
+					data.add(s.pop().getData());
 				}
 				return preparePath(start, end, path);
 			}
@@ -113,8 +113,8 @@ public class MyUndirectedGraph<T> implements UndirectedGraph<T> {
 					if(!m.visited) {
 						// TODO: Remove print
 //						System.out.println("Letar connection åt (" + n.data + ")" + " hittade (" + m.data + ")");
-						path.add(m.data);
-						path.add(n.data);
+						path.add(m.getData());
+						path.add(n.getData());
 						s.push(m);
 						m.checkAndMark();
 						break; // Behöver inte fortsätta
@@ -155,10 +155,10 @@ public class MyUndirectedGraph<T> implements UndirectedGraph<T> {
 					// TODO: Remove print
 //					System.out.println("Stod på (" + n + "), queuar (" + edge.getConnection() + ")");
 //					queue.offer(edge.getConnection());
-					path.add(neighbour.data);
-					path.add(n.data);
+					path.add(neighbour.getData());
+					path.add(n.getData());
 					
-					if(neighbour.data.equals(end)) {
+					if(neighbour.getData().equals(end)) {
 						return preparePath(start, end, path);
 					} else {
 							queue.offer(neighbour);
