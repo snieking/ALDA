@@ -2,7 +2,6 @@ package alda.graph;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -79,19 +78,61 @@ public class MyUndirectedGraph<T> implements UndirectedGraph<T> {
 	}
 
 	@Override
-	public List depthFirstSearch(Object start, Object end) {
-		// TODO Auto-generated method stub
+	public List<T> depthFirstSearch(T start, T end) {
+		Node<T> n = graph.get(start);
+		
+		Stack<Node<T>> s = new Stack<>();
+		ArrayList<T> path = new ArrayList<>();
+		
+		if(start.equals(end)) {
+			path.add(start);
+			return path;
+		}
+		
+		s.push(n);
+		
+		n.checkAndMark();
+		
+		while(!s.isEmpty()) {
+			if(n.data.equals(end)) {
+				ArrayList<T> data = new ArrayList<>();
+				for(int i=0; i<s.size(); i++) {
+					data.add(s.pop().data);
+				}
+				return preparePath(start, end, path);
+			}
+			if(n.allNeighboursVisited()) {
+				// TODO: Remove print
+//				System.out.println("(" + n.data + ") alla grannar var besökta redan. Ny 'n' är (" + s.peek() + ") efter pop()");
+				n = s.pop();
+			}
+			else {
+				for(Edge<T> e : n.connections) {
+					Node<T> m = e.getConnection();
+					
+					if(!m.visited) {
+						// TODO: Remove print
+//						System.out.println("Letar connection åt (" + n.data + ")" + " hittade (" + m.data + ")");
+						path.add(m.data);
+						path.add(n.data);
+						s.push(m);
+						m.checkAndMark();
+						break; // Behöver inte fortsätta
+					}
+				}
+			}
+		}
+		
 		return null;
 	}
 
 	@Override
-	public List breadthFirstSearch(T start, T end) {
+	public List<T> breadthFirstSearch(T start, T end) {
 		shortest.clear();
-		LinkedHashSet<T> bfsNodes = new LinkedHashSet<>();
+
 		ArrayList<T> path = new ArrayList<>();
 		
 		Node<T> n = graph.get(start);
-		Node<T> goal = graph.get(end);
 		
 		if(start.equals(end)) {
 			path.add(start);
@@ -103,12 +144,12 @@ public class MyUndirectedGraph<T> implements UndirectedGraph<T> {
 		queue.offer(n);
 		
 		n.checkAndMark();
-		bfsNodes.add(n.data); // Lägger till första noden.
+
 		
 		while(!queue.isEmpty()) {
 			n = queue.poll(); // Sätter n till första platsen i kön.
 //			n.checkAndMark();
-			for(Edge edge : n.connections) {
+			for(Edge<T> edge : n.connections) {
 				Node<T> neighbour = edge.getConnection();
 				if(neighbour.checkAndMark()) {
 					// TODO: Remove print
@@ -125,13 +166,13 @@ public class MyUndirectedGraph<T> implements UndirectedGraph<T> {
 				}
 			}
 		}
-		System.out.println(bfsNodes);
+
 		clearNodes();
 		return null;
 //		return new ArrayList<T>(bfsNodes);
 	}
 	
-	private List preparePath(T start, T end, List<T> path) {
+	private List<T> preparePath(T start, T end, List<T> path) {
 		
 		// Tar reda på vad slutnoden direkt kom ifrån.
 		int index = path.indexOf(end);
@@ -157,7 +198,7 @@ public class MyUndirectedGraph<T> implements UndirectedGraph<T> {
 	}
 
 	@Override
-	public UndirectedGraph minimumSpanningTree() {
+	public UndirectedGraph<T> minimumSpanningTree() {
 		// TODO Auto-generated method stub
 		return null;
 	}

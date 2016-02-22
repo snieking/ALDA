@@ -31,10 +31,9 @@ public class Node<T> {
 				return true; //TODO: eller sant eller falskt?
 			}
 		}
-		
-		boolean added = connections.add(new Edge<T>(other, cost));
+	
 //		System.out.println("[2] Connected: " + this.data + " -> " + other.data + " with cost (" + cost +")" + " [" + added + "]");
-		return true;
+		return connections.add(new Edge<T>(other, cost));
 	}
 	
 	public boolean checkConnection(Node<T> other) {
@@ -79,6 +78,8 @@ public class Node<T> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
+		
+		@SuppressWarnings("unchecked") // TODO: Är det OK?
 		Node<T> other = (Node<T>) obj;
 
 		if (data == null) {
@@ -87,6 +88,18 @@ public class Node<T> {
 		} else if (!data.equals(other.data))
 			return false;
 		return true;
+	}
+	
+	public boolean allNeighboursVisited() {
+		boolean all = true;
+		for(Edge<T> e : connections) {
+			if(e.getConnection().visited == false) {
+				all = false;
+				break; // Behöver inte fortsätta
+			}
+		}
+		
+		return all;
 	}
 	
 	public String toString() {
