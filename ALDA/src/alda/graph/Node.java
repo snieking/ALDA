@@ -6,7 +6,6 @@ import java.util.ArrayList;
 public class Node<T> {
 	T data;
 	boolean visited = false;
-	Node<T> cameFrom;
 	ArrayList<Edge<T>> connections = new ArrayList<>();
 	
 	public Node(T data) {
@@ -43,10 +42,6 @@ public class Node<T> {
 		}
 		
 		return false;
-	}
-	
-	public Node<T> getCameFrom() {
-		return cameFrom;
 	}
 	
 	public int getCost(Node<T> other) {
