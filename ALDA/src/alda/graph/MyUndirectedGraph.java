@@ -241,21 +241,22 @@ public class MyUndirectedGraph<T> implements UndirectedGraph<T> {
 				}
 				next.visited = true;
 				node = next;
-				edge = pq.poll();
+//				edge = pq.poll();
 				System.out.println("no.. here:)");
 				System.out.println("next innan getConnection() = (" + next.getData() + ")");
 			} else {
 				System.out.println("here:)");
-				edge = pq.poll();
+//				edge = pq.poll();
 			}
 			
 			for(Edge<T> e : graph.get(next.getData()).connections) {
+				System.out.println("Står på nod: (" + node.getData() + ")");
 				if(!e.getConnection().visited) {
 					System.out.println("Queueing: " + e.getConnection() + " with cost = " + e.getCost());
 					pq.add(e);
 				}
 			}
-			
+			edge = pq.poll();
 			System.out.println("Graph size: " + miniTree.getNumberOfNodes());
 		}
 		

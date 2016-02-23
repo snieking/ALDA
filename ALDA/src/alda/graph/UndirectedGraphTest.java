@@ -28,42 +28,42 @@ public class UndirectedGraphTest {
 		add("A", "B", "C", "D", "E", "F", "G", "H", "I", "J");
 	}
 
-//	@Test
-//	public void testAdd() {
-//		addExampleNodes();
-//		assertFalse(graph.add("D"));
-//		assertFalse(graph.add("J"));
-//		assertTrue(graph.add("K"));
-//	}
-//
-//	@Test
-//	public void testConnect() {
-//		addExampleNodes();
-//		assertFalse(graph.isConnected("A", "Z"));
-//		assertFalse(graph.connect("A", "Z", 5));
-//		assertEquals(-1, graph.getCost("A", "Z"));
-//		assertFalse(graph.connect("X", "B", 5));
-//		assertEquals(-1, graph.getCost("X", "B"));
-//		assertEquals(-1, graph.getCost("B", "X"));
-//
-//		assertFalse(graph.isConnected("A", "G"));
-//		assertFalse(graph.isConnected("G", "A"));
-//		assertTrue(graph.connect("A", "G", 5));
-//		assertTrue(graph.isConnected("A", "G"));
-//		assertTrue(graph.isConnected("G", "A"));
-//		assertEquals(5, graph.getCost("A", "G"));
-//		assertEquals(5, graph.getCost("G", "A"));
-//		assertTrue(graph.connect("G", "A", 3));
-//		assertEquals(3, graph.getCost("A", "G"));
-//		assertEquals(3, graph.getCost("G", "A"));
-//	}
-//
-//	@Test
-//	public void testTooLowWeight() {
-//		addExampleNodes();
-//		assertFalse(graph.connect("A", "B", 0));
-//		assertFalse(graph.connect("C", "D", -1));
-//	}
+	@Test
+	public void testAdd() {
+		addExampleNodes();
+		assertFalse(graph.add("D"));
+		assertFalse(graph.add("J"));
+		assertTrue(graph.add("K"));
+	}
+
+	@Test
+	public void testConnect() {
+		addExampleNodes();
+		assertFalse(graph.isConnected("A", "Z"));
+		assertFalse(graph.connect("A", "Z", 5));
+		assertEquals(-1, graph.getCost("A", "Z"));
+		assertFalse(graph.connect("X", "B", 5));
+		assertEquals(-1, graph.getCost("X", "B"));
+		assertEquals(-1, graph.getCost("B", "X"));
+
+		assertFalse(graph.isConnected("A", "G"));
+		assertFalse(graph.isConnected("G", "A"));
+		assertTrue(graph.connect("A", "G", 5));
+		assertTrue(graph.isConnected("A", "G"));
+		assertTrue(graph.isConnected("G", "A"));
+		assertEquals(5, graph.getCost("A", "G"));
+		assertEquals(5, graph.getCost("G", "A"));
+		assertTrue(graph.connect("G", "A", 3));
+		assertEquals(3, graph.getCost("A", "G"));
+		assertEquals(3, graph.getCost("G", "A"));
+	}
+
+	@Test
+	public void testTooLowWeight() {
+		addExampleNodes();
+		assertFalse(graph.connect("A", "B", 0));
+		assertFalse(graph.connect("C", "D", -1));
+	}
 
 	// Nedanst�ende kod �r skriven i ett format f�r att beskriva grafer som
 	// heter dot och kan anv�ndas om ni vill ha en bild av den graf som
@@ -127,25 +127,25 @@ public class UndirectedGraphTest {
 		testPath(start, end, path);
 	}
 
-//	@Test
-//	public void testDepthFirstSearchFromAToJ() {
-//		testDepthFirstSearch("A", "J", 5);
-//	}
-//
-//	@Test
-//	public void testDepthFirstSearchFromJToA() {
-//		testDepthFirstSearch("J", "A", 5);
-//	}
-//
-//	@Test
-//	public void testDepthFirstSearchFromFToE() {
-//		testDepthFirstSearch("F", "E", 3);
-//	}
-//
-//	@Test
-//	public void testDepthFirstSearchFromFToF() {
-//		testDepthFirstSearch("F", "E", 1);
-//	}
+	@Test
+	public void testDepthFirstSearchFromAToJ() {
+		testDepthFirstSearch("A", "J", 5);
+	}
+
+	@Test
+	public void testDepthFirstSearchFromJToA() {
+		testDepthFirstSearch("J", "A", 5);
+	}
+
+	@Test
+	public void testDepthFirstSearchFromFToE() {
+		testDepthFirstSearch("F", "E", 3);
+	}
+
+	@Test
+	public void testDepthFirstSearchFromFToF() {
+		testDepthFirstSearch("F", "E", 1);
+	}
 
 	private void testBreadthFirstSearch(String start, String end, int expectedathLength) {
 		createExampleGraph();
@@ -156,48 +156,48 @@ public class UndirectedGraphTest {
 		testPath(start, end, path);
 	}
 
-//	@Test
-//	public void testBreadthFirstSearchFromAToJ() {
-//		testBreadthFirstSearch("A", "J", 5);
-//	}
-//
-//	@Test
-//	public void testBreadthFirstSearchFromJToA() {
-//		testBreadthFirstSearch("J", "A", 5);
-//	}
-//
-//	@Test
-//	public void testBreadthFirstSearchFromFToE() {
-//		testBreadthFirstSearch("F", "E", 4);
-//	}
-//
-//	@Test
-//	public void testBreadthFirstSearchFromFToF() {
-//		testBreadthFirstSearch("F", "F", 1);
-//	}
-//
-//	@Test
-//	public void testMinimumSpanningTree() {
-//		createExampleGraph();
-//		UndirectedGraph<String> mst = graph.minimumSpanningTree();
-//		System.out.println("Antalet noder i mst är: " + mst.getNumberOfNodes());
-//
-//		int totalEdges = 0;
-//		int totalCost = 0;
-//
-//		for (char node1 = 'A'; node1 <= 'J'; node1++) {
-//			for (char node2 = node1; node2 <= 'J'; node2++) {
-//				int cost = mst.getCost("" + node1, "" + node2);
-//				if (cost > -1) {
-//					totalEdges++;
-//					totalCost += cost;
-//				}
-//			}
-//		}
-//
-//		assertEquals(9, totalEdges);
-//		assertEquals(45, totalCost);
-//	}
+	@Test
+	public void testBreadthFirstSearchFromAToJ() {
+		testBreadthFirstSearch("A", "J", 5);
+	}
+
+	@Test
+	public void testBreadthFirstSearchFromJToA() {
+		testBreadthFirstSearch("J", "A", 5);
+	}
+
+	@Test
+	public void testBreadthFirstSearchFromFToE() {
+		testBreadthFirstSearch("F", "E", 4);
+	}
+
+	@Test
+	public void testBreadthFirstSearchFromFToF() {
+		testBreadthFirstSearch("F", "F", 1);
+	}
+
+	@Test
+	public void testMinimumSpanningTree() {
+		createExampleGraph();
+		UndirectedGraph<String> mst = graph.minimumSpanningTree();
+		System.out.println("Antalet noder i mst är: " + mst.getNumberOfNodes());
+
+		int totalEdges = 0;
+		int totalCost = 0;
+
+		for (char node1 = 'A'; node1 <= 'J'; node1++) {
+			for (char node2 = node1; node2 <= 'J'; node2++) {
+				int cost = mst.getCost("" + node1, "" + node2);
+				if (cost > -1) {
+					totalEdges++;
+					totalCost += cost;
+				}
+			}
+		}
+
+		assertEquals(9, totalEdges);
+		assertEquals(45, totalCost);
+	}
 
 	// H�r b�rjar vi anv�nda andra grafer
 
