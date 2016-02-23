@@ -66,7 +66,7 @@ public class Node<T> {
 		}
 	
 //		System.out.println("[2] Connected: " + this.data + " -> " + other.data + " with cost (" + cost +")" + " [" + added + "]");
-		return connections.add(new Edge<T>(other, cost));
+		return connections.add(new Edge<T>(other, cost, this));
 	}
 	
 	public boolean checkConnection(Node<T> other) {

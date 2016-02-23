@@ -203,6 +203,7 @@ public class MyUndirectedGraph<T> implements UndirectedGraph<T> {
 	@Override
 	public UndirectedGraph<T> minimumSpanningTree() {
 		Entry<T, Node<T>> entry=graph.entrySet().iterator().next();
+		HashMap<T, Node<T>> addedNodes = new HashMap<>();
 		T first = entry.getKey();
 		
 		// Börja med ett tomt träd och en tom prioritetskö.
@@ -212,15 +213,17 @@ public class MyUndirectedGraph<T> implements UndirectedGraph<T> {
 		// Lägg till första noden i trädet.
 		Node<T> node = new Node<T>(first);
 		miniTree.add(first);
+		addedNodes.put(first, node);
 		node.visited = true;
+		graph.get(first).visited = true;
 		
+		System.out.println("Står på nod: (" + first + ")");
 		// Lägg till alla bågar som utgår från första i prioritetskön.
 		for(Edge<T> e : graph.get(first).connections) {
-			System.out.println("Added... " + e.getConnection());
+			System.out.println("Queueing: " + e.getConnection() + " with cost = " + e.getCost());
 			pq.add(e);
 		}
 		
-		System.out.println("no more...");
 		// Ta ut ur PK den båge som har lägst vikt.
 		Edge<T> edge = pq.poll();
 		
@@ -229,13 +232,30 @@ public class MyUndirectedGraph<T> implements UndirectedGraph<T> {
 			System.out.println("loopie");
 			Node<T> next = edge.getConnection();
 			if(!next.visited) {
-				System.out.println("Adding (" + next.getData() + ")");
-				miniTree.add(next.getData());
+				if(!node.equals(next)) {
+					System.out.println("Adding (" + next.getData() + ")");
+					miniTree.add(next.getData());
+					addedNodes.put(next.getData(), new Node<T>(next.getData()));
+					miniTree.connect(edge.getConnectedFrom().getData(), next.getData(), edge.getCost());
+					System.out.println("Connected: (" + edge.getConnectedFrom().getData() + ") with (" + next.getData() + "), cost = " + edge.getCost());
+				}
 				next.visited = true;
 				node = next;
+				edge = pq.poll();
+				System.out.println("no.. here:)");
+				System.out.println("next innan getConnection() = (" + next.getData() + ")");
 			} else {
+				System.out.println("here:)");
 				edge = pq.poll();
 			}
+			
+			for(Edge<T> e : graph.get(next.getData()).connections) {
+				if(!e.getConnection().visited) {
+					System.out.println("Queueing: " + e.getConnection() + " with cost = " + e.getCost());
+					pq.add(e);
+				}
+			}
+			
 			System.out.println("Graph size: " + miniTree.getNumberOfNodes());
 		}
 		

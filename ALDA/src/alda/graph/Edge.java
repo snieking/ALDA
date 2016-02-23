@@ -3,11 +3,17 @@ package alda.graph;
 
 public class Edge<T> implements Comparable<Edge<T>>{
 	private Node<T> connection;
+	private Node<T> connectedFrom;
 	private int cost;
 	
-	public Edge(Node<T> connection, int cost) {
+	public Edge(Node<T> connection, int cost, Node<T>connectedFrom) {
 		this.connection = connection;
 		this.cost = cost;
+		this.connectedFrom = connectedFrom;
+	}
+	
+	public Node<T> getConnectedFrom() {
+		return connectedFrom;
 	}
 	
 	public Node<T> getConnection() {
