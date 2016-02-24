@@ -9,6 +9,12 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Stack;
 
+/**
+ * Implements a Graph.
+ * 
+ * @author Viktor Plane (vipl4364) - viktorplane.sonie@gmail.com
+ * @author Olof Hofstedt (olho8226) - olof.hofstedt93@gmail.com
+ */
 public class MyUndirectedGraph<T> implements UndirectedGraph<T> {
 	private int numberOfNodes = 0;
 	private int numberOfEdges = 0;
@@ -73,6 +79,9 @@ public class MyUndirectedGraph<T> implements UndirectedGraph<T> {
 		return n1.getCost(n2);
 	}
 	
+	/**
+	 * Privat metod för att återställa alla noder till obesökta.
+	 */
 	private void clearNodes() {
 		for(Node<T> node : graph.values())
 			node.visited = false;
@@ -157,6 +166,14 @@ public class MyUndirectedGraph<T> implements UndirectedGraph<T> {
 		return null;
 	}
 	
+	/**
+	 * Privat hjälpmetod för {@link #breadthFirstSearch(T, T} 
+	 * och {@link #depthFirstSearch(T, T)} för att ta fram vägen som togs.
+	 * @param start data
+	 * @param end data that it's looking for.
+	 * @param path vilket är alla noder som nämns i vägen.
+	 * @return list med datan som var rätt väg.
+	 */
 	private List<T> gatherPath(T start, T end, List<T> path) {
 		// Tar reda på vad slutnoden direkt kom ifrån.
 		int index = path.indexOf(end); 
