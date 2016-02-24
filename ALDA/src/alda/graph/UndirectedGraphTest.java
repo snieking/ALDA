@@ -9,6 +9,8 @@ import java.util.Set;
 import org.junit.*;
 
 public class UndirectedGraphTest {
+	
+	// ToDo: kontrollera en sökning från en nod till samma nod
 
 	UndirectedGraph<String> graph = new MyUndirectedGraph<>();
 
@@ -65,23 +67,23 @@ public class UndirectedGraphTest {
 		assertFalse(graph.connect("C", "D", -1));
 	}
 
-	// Nedanst�ende kod �r skriven i ett format f�r att beskriva grafer som
-	// heter dot och kan anv�ndas om ni vill ha en bild av den graf som
-	// nedanst�ende test anv�nder. Det finns flera program och webbsidor man kan
-	// anv�nda f�r att omvandla koden till en bild, bland annat
+	// Nedanstående kod är skriven i ett format för att beskriva grafer som
+	// heter dot och kan användas om ni vill ha en bild av den graf som
+	// nedanående test använder. Det finns flera program och webbsidor man kan
+	// använda för att omvandla koden till en bild, bland annat
 	// http://sandbox.kidstrythisathome.com/erdos/
 
-	// Observera dock att vi kommer att k�ra testfall p� andra och betydligt
-	// st�rre grafer.
+	// Observera dock att vi kommer att köra testfall på andra och betydligt
+	// större grafer.
 
 	// @formatter:off
-//		 graph G {
-//		 A -- A [label=1]; A -- G [label=3]; G -- B [label=28];
-//		 B -- F [label=5]; F -- F [label=3]; F -- H [label=1];
-//		 H -- D [label=1]; H -- I [label=3]; D -- I [label=1];
-//		 B -- D [label=2]; B -- C [label=3]; C -- D [label=5];
-//		 E -- C [label=2]; E -- D [label=2]; J -- D [label=5];
-//		 }
+	// graph G {
+	// A -- A [label=1]; A -- G [label=3]; G -- B [label=28];
+	// B -- F [label=5]; F -- F [label=3]; F -- H [label=1];
+	// H -- D [label=1]; H -- I [label=3]; D -- I [label=1];
+	// B -- D [label=2]; B -- C [label=3]; C -- D [label=5];
+	// E -- C [label=2]; E -- D [label=2]; J -- D [label=5];
+	// }
 	// @formatter:on
 
 	private void createExampleGraph() {
@@ -103,6 +105,17 @@ public class UndirectedGraphTest {
 		connect("E", "D", 2);
 		connect("J", "D", 5);
 	}
+	
+	@Test
+	public void testNodeToSameNode() {
+		createExampleGraph();
+		
+		assertTrue(graph.isConnected("A", "A"));
+		assertEquals(1, graph.getCost("A", "A"));
+		testOwnDepthFirstSearch("A", "A", 1);
+		testOwnBreadthFirstSearch("A", "A", 1);
+		
+	}
 
 	private void testPath(String start, String end, List<String> path) {
 		assertEquals(start, path.get(0));
@@ -121,6 +134,7 @@ public class UndirectedGraphTest {
 	private void testDepthFirstSearch(String start, String end, int minimumPathLength) {
 		createExampleGraph();
 		List<String> path = graph.depthFirstSearch(start, end);
+
 		assertTrue(path.size() >= minimumPathLength);
 		assertTrue(path.size() <= graph.getNumberOfNodes());
 
@@ -144,7 +158,7 @@ public class UndirectedGraphTest {
 
 	@Test
 	public void testDepthFirstSearchFromFToF() {
-		testDepthFirstSearch("F", "E", 1);
+		testDepthFirstSearch("F", "F", 1);
 	}
 
 	private void testBreadthFirstSearch(String start, String end, int expectedathLength) {
@@ -180,7 +194,6 @@ public class UndirectedGraphTest {
 	public void testMinimumSpanningTree() {
 		createExampleGraph();
 		UndirectedGraph<String> mst = graph.minimumSpanningTree();
-		System.out.println("Antalet noder i mst är: " + mst.getNumberOfNodes());
 
 		int totalEdges = 0;
 		int totalCost = 0;
@@ -225,17 +238,47 @@ public class UndirectedGraphTest {
 		for (int node1 = 1; node1 <= 7; node1++) {
 			for (int node2 = node1; node2 <= 7; node2++) {
 				int cost = mst.getCost("V" + node1, "V" + node2);
-				System.out.println("Cost för: V" + node1 + " & V" + node2 + " är = " + cost);
 				if (cost > -1) {
 					totalEdges++;
 					totalCost += cost;
-					System.out.println("Total cost är = " + totalCost);
 				}
 			}
 		}
 
 		assertEquals(6, totalEdges);
 		assertEquals(16, totalCost);
+	}
+	
+	private void testOwnDepthFirstSearch(String start, String end, int minimumPathLength) {
+		List<String> path = graph.depthFirstSearch(start, end);
+		assertTrue(path.size() >= minimumPathLength);
+		assertTrue(path.size() <= graph.getNumberOfNodes());
+		
+		testPath(start, end, path);
+	}
+	
+	private void testOwnBreadthFirstSearch(String start, String end, int expectedathLength) {
+		List<String> path = graph.breadthFirstSearch(start, end);
+		
+		assertEquals(expectedathLength, path.size());
+		
+		testPath(start, end, path);
+	}
+	
+	@Test
+	public void secondNodeLoop() {
+		add("A", "B", "C", "D", "E");
+		connect("A", "B", 2);
+		connect("B", "B", 3);
+		connect("B", "C", 4);
+		connect("C", "C", 2);
+		connect("C", "D", 1);
+		connect("E", "E", 2);
+		
+		testOwnBreadthFirstSearch("A", "D", 4);
+		testOwnBreadthFirstSearch("B", "D", 3);
+		testOwnDepthFirstSearch("A", "D", 4);
+		testOwnDepthFirstSearch("B", "D", 3);
 	}
 
 }

@@ -2,10 +2,8 @@ package alda.graph;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -82,6 +80,8 @@ public class MyUndirectedGraph<T> implements UndirectedGraph<T> {
 
 	@Override
 	public List<T> depthFirstSearch(T start, T end) {
+		shortest.clear();
+		clearNodes();
 		Node<T> n = graph.get(start);
 		
 		Stack<Node<T>> s = new Stack<>();
@@ -93,7 +93,6 @@ public class MyUndirectedGraph<T> implements UndirectedGraph<T> {
 		}
 		
 		s.push(n);
-		
 		n.checkAndMark();
 		
 		while(!s.isEmpty()) {
@@ -102,20 +101,14 @@ public class MyUndirectedGraph<T> implements UndirectedGraph<T> {
 				for(int i=0; i<s.size(); i++) {
 					data.add(s.pop().getData());
 				}
-				return preparePath(start, end, path);
+				return gatherPath(start, end, path);
 			}
-			if(n.allNeighboursVisited()) {
-				// TODO: Remove print
-//				System.out.println("(" + n.data + ") alla grannar var besökta redan. Ny 'n' är (" + s.peek() + ") efter pop()");
+			if(n.allNeighboursVisited())
 				n = s.pop();
-			}
 			else {
 				for(Edge<T> e : n.connections) {
 					Node<T> m = e.getConnection();
-					
 					if(!m.visited) {
-						// TODO: Remove print
-//						System.out.println("Letar connection åt (" + n.data + ")" + " hittade (" + m.data + ")");
 						path.add(m.getData());
 						path.add(n.getData());
 						s.push(m);
@@ -132,9 +125,9 @@ public class MyUndirectedGraph<T> implements UndirectedGraph<T> {
 	@Override
 	public List<T> breadthFirstSearch(T start, T end) {
 		shortest.clear();
+		clearNodes();
 
 		ArrayList<T> path = new ArrayList<>();
-		
 		Node<T> n = graph.get(start);
 		
 		if(start.equals(end)) {
@@ -142,61 +135,43 @@ public class MyUndirectedGraph<T> implements UndirectedGraph<T> {
 			return path;
 		}
 		
-		
 		Queue<Node<T>> queue = new LinkedList<>();
 		queue.offer(n);
-		
 		n.checkAndMark();
-
 		
 		while(!queue.isEmpty()) {
-			n = queue.poll(); // Sätter n till första platsen i kön.
-//			n.checkAndMark();
+			n = queue.poll();
 			for(Edge<T> edge : n.connections) {
 				Node<T> neighbour = edge.getConnection();
 				if(neighbour.checkAndMark()) {
-					// TODO: Remove print
-//					System.out.println("Stod på (" + n + "), queuar (" + edge.getConnection() + ")");
-//					queue.offer(edge.getConnection());
 					path.add(neighbour.getData());
 					path.add(n.getData());
-					
 					if(neighbour.getData().equals(end)) {
-						return preparePath(start, end, path);
-					} else {
+						return gatherPath(start, end, path);
+					} else 
 							queue.offer(neighbour);
-					}
 				}
 			}
 		}
 
-		clearNodes();
 		return null;
-//		return new ArrayList<T>(bfsNodes);
 	}
 	
-	private List<T> preparePath(T start, T end, List<T> path) {
-		
+	private List<T> gatherPath(T start, T end, List<T> path) {
 		// Tar reda på vad slutnoden direkt kom ifrån.
-		int index = path.indexOf(end);
+		int index = path.indexOf(end); 
 		T begin = path.get(index + 1);
-		// TODO: Remove print
-//		System.out.println("Begin är: " + begin);
 		
 		// Lägger till slutnoden till kortaste vägen.
-		shortest.add(0, end);
+		shortest.add(0, end); 
 		
 		if(begin.equals(start)) {
 			// Ursprungliga noden är funnen.
 			shortest.add(0, start);
-			// TODO: Remove print
-//			System.out.println(shortest);
 			return shortest;
 		} else {
-			// Rekursiv metod för att leta vart slutnåden kom ifrån.
-			// TODO: Remove print
-//			System.out.println("Rekursivt anrop");
-			return preparePath(start, begin, path);
+			// Rekursion för att fortsätta leta vart slutnåden kom ifrån.
+			return gatherPath(start, begin, path);
 		}
 	}
 
@@ -204,65 +179,44 @@ public class MyUndirectedGraph<T> implements UndirectedGraph<T> {
 	public UndirectedGraph<T> minimumSpanningTree() {
 		Entry<T, Node<T>> entry=graph.entrySet().iterator().next();
 		HashMap<T, Node<T>> addedNodes = new HashMap<>();
-		T first = entry.getKey();
+		// Tar fram den första noden att använda som startpunkt.
+		T first = entry.getKey(); 
 		
-		// Börja med ett tomt träd och en tom prioritetskö.
 		UndirectedGraph<T> miniTree = new MyUndirectedGraph<T>();
 		PriorityQueue<Edge<T>> pq = new PriorityQueue<Edge<T>>();
 		
-		// Lägg till första noden i trädet.
 		Node<T> node = new Node<T>(first);
 		miniTree.add(first);
 		addedNodes.put(first, node);
 		node.visited = true;
 		graph.get(first).visited = true;
 		
-		System.out.println("Står på nod: (" + first + ")");
-		// Lägg till alla bågar som utgår från första i prioritetskön.
-		for(Edge<T> e : graph.get(first).connections) {
-			System.out.println("Queueing: " + e.getConnection() + " with cost = " + e.getCost());
+		for(Edge<T> e : graph.get(first).connections)
 			pq.add(e);
-		}
-		
-		// Ta ut ur PK den båge som har lägst vikt.
+
 		Edge<T> edge = pq.poll();
 		
 		while(miniTree.getNumberOfNodes() < getNumberOfNodes()) {
-			// Om noden m inte redan finns i vårat träd. Lägg både noden och bågen.
-			System.out.println("loopie");
 			Node<T> next = edge.getConnection();
 			if(!next.visited) {
 				if(!node.equals(next)) {
-					System.out.println("Adding (" + next.getData() + ")");
 					miniTree.add(next.getData());
 					addedNodes.put(next.getData(), new Node<T>(next.getData()));
 					miniTree.connect(edge.getConnectedFrom().getData(), next.getData(), edge.getCost());
-					System.out.println("Connected: (" + edge.getConnectedFrom().getData() + ") with (" + next.getData() + "), cost = " + edge.getCost());
 				}
+				
 				next.visited = true;
 				node = next;
-//				edge = pq.poll();
-				System.out.println("no.. here:)");
-				System.out.println("next innan getConnection() = (" + next.getData() + ")");
-			} else {
-				System.out.println("here:)");
-//				edge = pq.poll();
 			}
 			
-			for(Edge<T> e : graph.get(next.getData()).connections) {
-				System.out.println("Står på nod: (" + node.getData() + ")");
-				if(!e.getConnection().visited) {
-					System.out.println("Queueing: " + e.getConnection() + " with cost = " + e.getCost());
+			for(Edge<T> e : graph.get(next.getData()).connections)
+				if(!e.getConnection().visited)
 					pq.add(e);
-				}
-			}
+
 			edge = pq.poll();
-			System.out.println("Graph size: " + miniTree.getNumberOfNodes());
 		}
 		
-		
 		return (UndirectedGraph<T>) miniTree;
-
 	}
 
 }
