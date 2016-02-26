@@ -187,7 +187,7 @@ public class MyUndirectedGraph<T> implements UndirectedGraph<T> {
 			shortest.add(0, start);
 			return shortest;
 		} else {
-			// Rekursion för att fortsätta leta vart slutnåden kom ifrån.
+			// Rekursion för att fortsätta leta vart slutnoden kom ifrån.
 			return gatherPath(start, begin, path);
 		}
 	}
