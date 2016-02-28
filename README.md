@@ -1,2 +1,2 @@
-# ALDA
-Algorithms and Data Structures in Java
+# Algorithms and Data Structures in Java
+Course work in university.
