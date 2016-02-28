@@ -116,6 +116,33 @@ public class UndirectedGraphTest {
 		testOwnBreadthFirstSearch("A", "A", 1);
 		
 	}
+	
+	@Test
+	public void mstUnlinkedNodes() {
+		addExampleNodes();
+		connect("A", "A", 1);
+		connect("A", "G", 3);
+		connect("G", "B", 28);
+		
+		UndirectedGraph<String> mst = graph.minimumSpanningTree();
+
+		int totalEdges = 0;
+		int totalCost = 0;
+
+		for (char node1 = 'A'; node1 <= 'J'; node1++) {
+			for (char node2 = node1; node2 <= 'J'; node2++) {
+				int cost = mst.getCost("" + node1, "" + node2);
+				if (cost > -1) {
+					totalEdges++;
+					totalCost += cost;
+				}
+			}
+		}
+
+		assertEquals(2, totalEdges);
+		assertEquals(31, totalCost);
+		
+	}
 
 	private void testPath(String start, String end, List<String> path) {
 		assertEquals(start, path.get(0));

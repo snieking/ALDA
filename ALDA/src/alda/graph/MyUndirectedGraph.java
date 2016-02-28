@@ -213,7 +213,7 @@ public class MyUndirectedGraph<T> implements UndirectedGraph<T> {
 
 		Edge<T> edge = pq.poll();
 		
-		while(miniTree.getNumberOfNodes() < getNumberOfNodes()) {
+		while(miniTree.getNumberOfNodes() < getNumberOfNodes() && edge != null) {
 			Node<T> next = edge.getConnection();
 			if(!next.visited) {
 				if(!node.equals(next)) {
