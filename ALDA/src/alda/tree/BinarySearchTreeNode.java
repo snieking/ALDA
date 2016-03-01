@@ -10,7 +10,7 @@ package alda.tree;
  */
 public class BinarySearchTreeNode<T extends Comparable<T>> {
 
-	private T data;
+	public T data;
 	private BinarySearchTreeNode<T> left;
 	private BinarySearchTreeNode<T> right;
 
