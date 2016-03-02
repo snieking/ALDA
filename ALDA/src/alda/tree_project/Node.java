@@ -285,7 +285,7 @@ public class Node<T extends Comparable<T>> {
 	 * 
 	 * @return strängrepresentationen för det (sub)träd som noden utgör root i.
 	 */
-	public String toString() {
+	public String printString() {
 		String sb = "";
 		sb += buildString(this, sb);
 		return sb;
@@ -309,6 +309,11 @@ public class Node<T extends Comparable<T>> {
 		}
 		
 		return string;
+	}
+	
+	@Override
+	public String toString() {
+		return data.toString();
 	}
 
 }

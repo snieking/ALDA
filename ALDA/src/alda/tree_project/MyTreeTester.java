@@ -2,6 +2,8 @@ package alda.tree_project;
 
 import static org.junit.Assert.*;
 
+import java.util.Iterator;
+
 import org.junit.Test;
 
 public class MyTreeTester {
@@ -26,6 +28,12 @@ public class MyTreeTester {
 		assertFalse(intTree.remove(20));
 		assertEquals("[4, 7, 9, 10, 14]", intTree.toString());
 		assertEquals(3, intTree.depth());
+//		assertEquals("[4]", intTree.findSmallest());
+//		Iterator<?> iter = intTree.iterator();
+//		assertEquals("4", iter.next());
+//		assertEquals(7, iter.next());
+//		assertTrue(intTree.remove(9));
+//		assertEquals(10, iter.next());
 	}
 
 }

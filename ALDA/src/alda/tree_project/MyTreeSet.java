@@ -1,8 +1,10 @@
 package alda.tree_project;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Our implementation of TreeSet.
@@ -106,6 +108,54 @@ public class MyTreeSet<T extends Comparable<T>> {
 	}
 	
 	/**
+	 * Iterator for the TreeSet, it starts from the smallest node, 
+	 * and goes to the largest node. Works like a LinkedList by calling 
+	 * {@link Node#nextLargest}, which is possible because of {@link #updateNextSmallestAndLargest()}.
+	 * @return iterator for the TreeSet.
+	 * @see Node#nextLargest
+	 * @see #updateNextSmallestAndLargest()
+	 */
+	public Iterator<Node<T>> iterator() {
+		return new Iterator<Node<T>>() {
+			Node<T> current = null;
+			
+			@Override
+			public boolean hasNext() {
+				return size() > 0 && current != tail.nextSmallest;
+			}
+
+			@Override
+			public Node<T> next() {
+				if(current == null) {
+					current = head.nextLargest;
+					return current;
+				}
+				if(current.nextLargest == null)
+					throw new NoSuchElementException();
+				current = current.nextLargest;
+				return current;
+			}	
+		};
+	}
+	
+	/**
+	 * Returns the smallest node of the TreeSet.
+	 * @return node which is the smallest one.
+	 */
+	public Node<T> findSmallest() {
+		System.out.println(head.nextLargest);
+		return head.nextLargest;
+	}
+	
+	/**
+	 * Returns the largest node of the TreeSet.
+	 * @return node which is the largest one.
+	 */
+	public Node<T> findLargest() {
+		return tail.nextSmallest;
+	}
+	
+	/**
 	 * Private method intended to be called when the tree structure 
 	 * has been changed, which is after an element has been added or removed.
 	 * 
@@ -117,16 +167,24 @@ public class MyTreeSet<T extends Comparable<T>> {
 	private void updateNextSmallestAndLargest() {
 		ArrayList<Node<T>> tree = (ArrayList<Node<T>>) traverse();
 		
-		for(int i=0; i<tree.size(); i++) {
-			if(i == 0)
-				tree.get(0).nextSmallest = null;
-			else
-				tree.get(i).nextSmallest = tree.get(i-1);
-			
-			if(i == tree.size())
-				tree.get(tree.size()).nextLargest = null;
-			else
-				tree.get(i).nextLargest = tree.get(i+1);
+		System.out.println(tree.size());
+		if(tree.size() > 1) {
+			head.nextLargest = tree.get(0);
+			tail.nextSmallest = tree.get(tree.size()-1);
+			for(int i=0; i<tree.size()-1; i++) {
+				if(i == 0)
+					tree.get(0).nextSmallest = null;
+				else
+					tree.get(i).nextSmallest = tree.get(i-1);
+				
+				if(i == tree.size()-1)
+					tree.get(tree.size()-1).nextLargest = null;
+				else 
+					tree.get(i).nextLargest = tree.get(i+1);
+			}
+		} else {
+			head.nextLargest = tree.get(0);
+			tail.nextSmallest = tree.get(0);
 		}
 		
 	}
@@ -167,6 +225,7 @@ public class MyTreeSet<T extends Comparable<T>> {
 	 * @see #traverse()
 	 */
 	private List<Node<T>> treeTraverse(Node<T> node, List<Node<T>> tree) {
+		System.out.println("Traversing.. tree size: " + tree.size());
 		if(node.leftChild != null)
 			treeTraverse(node.leftChild, tree);
 		
@@ -211,7 +270,7 @@ public class MyTreeSet<T extends Comparable<T>> {
 	 * generate the <code>String</code> of all the nodes.
 	 */
 	public String toString() {
-		return "[" + (root == null ? "" : root.toString()) + "]";
+		return "[" + (root == null ? "" : root.printString()) + "]";
 	}
 
 }
