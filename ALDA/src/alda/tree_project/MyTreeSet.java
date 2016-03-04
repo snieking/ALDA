@@ -1,9 +1,6 @@
 package alda.tree_project;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
@@ -27,65 +24,62 @@ public class MyTreeSet<T extends Comparable<T>> {
 	}
 	
 	/**
-	 * Adds a new element to the tree. Calls the {@link #addAndUpdate(Comparable)}.
-	 * If <code>true</code>, uses the {@link #updateNextSmallestAndLargest()} 
-	 * method to update the next smallest and next largest element in the tree of the nodes.
-	 * Else, does nothing, which happens if you try to add an element which already exists.
-	 * 
-	 * @param data to be added.
-	 * @return <code>true</code> if data was successely added, else <code>false</code>.
-	 * @see #addAndUpdate(Comparable)
-	 * @see #updateNextSmallestAndLargest()
-	 */
-	public boolean add(T data) {
-		if(addAndUpdate(data)) {
-			updateNextSmallestAndLargest();
-			return true;
-		}
-		else
-			return false;
-	}
-	
-	/**
 	 * Private help method for adding an element. It is called by {@link #add(Comparable)}, 
 	 * in order to be able to call {@link #updateNextSmallestAndLargest()} before returning.
 	 * 
 	 * If the root is null, it will set the new data to be added as the root. Else it will 
 	 * add the data to the root and return <code>true</code> if it could do that successively.
 	 * 
+	 * Additionally, it places the node in the right place in the <code>LinkedList</code>.
+	 * 
 	 * @param data		to be added.
 	 * @return <code>true</code> if data was successely added, else <code>false</code>.
 	 * @see #add(Comparable)
 	 * @see #updateNextSmallestAndLargest()
 	 */
-	private boolean addAndUpdate(T data) {
+	public boolean add(T data) {
 		if (root == null) {
 			root = new Node<T>(data);
+			head.nextLargest = root;
+			tail.nextSmallest = root;
+			root.nextSmallest = head;
+			root.nextLargest = tail;
 			return true;
 		} else {
 			if(root.add(data)) {
+				Node<T> newNode = search(root, data);
+				Node<T> current = head.nextLargest;
+				boolean normal = true;
+				while(current.nextLargest != tail && current.nextLargest.data.compareTo(newNode.data) < 0) {
+					current = current.nextLargest;
+				}
+				
+				if(newNode.data.compareTo(head.nextLargest.data) < 0) {
+					normal = false;
+					newNode.nextLargest = head.nextLargest;
+					head.nextLargest.nextSmallest = newNode;
+					head.nextLargest = newNode;
+					newNode.nextSmallest = head;
+					
+				}
+				if(newNode.data.compareTo(tail.nextSmallest.data) > 0) {
+					normal = false;
+						newNode.nextSmallest = tail.nextSmallest;
+						tail.nextSmallest.nextLargest = newNode;
+						tail.nextSmallest = newNode;
+						newNode.nextLargest = tail;
+				}
+				if(normal) {
+					newNode.nextSmallest = current;
+					newNode.nextLargest = current.nextLargest;
+					current.nextLargest.nextSmallest = newNode;
+					current.nextLargest = newNode;
+				}
+				
 				return true;
 			} else
 				return false;
 		}
-	}
-	
-	/**
-	 * Removes an element from the tree. It calls {@link #removeAndUpdate(Comparable)},
-	 * and if it returns <code>true</code> it calls 
-	 * {@link #updateNextSmallestAndLargest()} and returns 
-	 * <code>true</true>. Else it returns false.
-	 * 
-	 * @param data to be removed.
-	 * @return <code>true</code> if an element has been removed, else <code>false</code>.
-	 */
-	public  boolean remove(T data) {
-		if(removeAndUpdate(data)) {
-			updateNextSmallestAndLargest();
-			return true;
-		}
-		else
-			return false;
 	}
 	
 	/**
@@ -95,16 +89,57 @@ public class MyTreeSet<T extends Comparable<T>> {
 	 * Returns true if the new size of the tree is less than the old size, 
 	 * which means an element has been removed.
 	 * 
+	 * Additionally, it updates the links in the <code>LinkedList</code> for the remove 
+	 * nodes before and after the removed one.
+	 * 
 	 * @param data to be removed.
 	 * @return <code>true</code> if an element has been removed, else <code>false</code>.
 	 * @see #remove(Comparable)
 	 * @see Node#remove(Comparable)
 	 */
-	private boolean removeAndUpdate(T data) {
+	public boolean remove(T data) {
 		int originalSize = size();
-		if (root != null)
-			root = root.remove(data);
+		if (root != null) {
+			Node<T> delNode = search(root, data);
+
+			if(delNode.data == data) {
+				if(delNode.nextSmallest == head) {
+					head.nextLargest = delNode.nextLargest;
+					delNode.nextLargest.nextSmallest = head;
+				}
+				if(delNode.nextLargest == tail) {
+					tail.nextSmallest = delNode.nextSmallest;
+					delNode.nextSmallest.nextLargest = tail;
+				}
+				
+				delNode.nextSmallest.nextLargest = delNode.nextLargest;
+				delNode.nextLargest.nextSmallest = delNode.nextSmallest;
+				root = root.remove(data);
+			}
+		}
+		
 		return size()<originalSize;
+	}
+	
+	/**
+	 * A private assist method that is used recursively by {@link #contains(Comparable)}
+	 * to search for the element.
+	 * 
+	 * @param node		the next one it should search under.
+	 * @return node 	that has the same data as the contains element, else the root.
+	 */
+	private Node<T> search(Node<T> node, T data) {
+		int cmp = data.compareTo(node.data);
+		if(cmp < 0) {
+			if(node.leftChild != null)
+				return search(node.leftChild, data);
+		}
+		else if(cmp > 0) {
+			if(node.rightChild != null)
+				return search(node.rightChild, data);
+		}
+		
+		return node;
 	}
 	
 	/**
@@ -115,8 +150,8 @@ public class MyTreeSet<T extends Comparable<T>> {
 	 * @see Node#nextLargest
 	 * @see #updateNextSmallestAndLargest()
 	 */
-	public Iterator<Node<T>> iterator() {
-		return new Iterator<Node<T>>() {
+	public Iterator<T> iterator() {
+		return new Iterator<T>() {
 			Node<T> current = null;
 			
 			@Override
@@ -125,116 +160,44 @@ public class MyTreeSet<T extends Comparable<T>> {
 			}
 
 			@Override
-			public Node<T> next() {
+			public T next() {
 				if(current == null) {
 					current = head.nextLargest;
-					return current;
+					return current.data;
 				}
 				if(current.nextLargest == null)
 					throw new NoSuchElementException();
 				current = current.nextLargest;
-				return current;
+				return current.data;
 			}	
 		};
 	}
 	
 	/**
-	 * Returns the smallest node of the TreeSet.
-	 * @return node which is the smallest one.
+	 * Package only method intended for testing only.
+	 * Returns the smallest element of the TreeSet.
+	 * @return element which is the smallest one.
 	 */
-	public Node<T> findSmallest() {
-		System.out.println(head.nextLargest);
-		return head.nextLargest;
+	T findSmallest() {
+		return head.nextLargest.data;
 	}
 	
 	/**
-	 * Returns the largest node of the TreeSet.
-	 * @return node which is the largest one.
+	 * Package only method intended for testing only.
+	 * Returns the largest element of the TreeSet.
+	 * @return element which is the largest one.
 	 */
-	public Node<T> findLargest() {
-		return tail.nextSmallest;
+	T findLargest() {
+		return tail.nextSmallest.data;
 	}
 	
 	/**
-	 * Private method intended to be called when the tree structure 
-	 * has been changed, which is after an element has been added or removed.
-	 * 
-	 * It uses {@link #traverse()} to generate an list with sorted nodes.
-	 * Then it assigns the next smallest & largest element to each node.
-	 * 
-	 * @see #traverse()
+	 * Method to check if data exists in the tree.
+	 * @param data to look for.
+	 * @return <code>true</code> if the data exists, else <code>false</code>.
 	 */
-	private void updateNextSmallestAndLargest() {
-		ArrayList<Node<T>> tree = (ArrayList<Node<T>>) traverse();
-		
-		System.out.println(tree.size());
-		if(tree.size() > 1) {
-			head.nextLargest = tree.get(0);
-			tail.nextSmallest = tree.get(tree.size()-1);
-			for(int i=0; i<tree.size()-1; i++) {
-				if(i == 0)
-					tree.get(0).nextSmallest = null;
-				else
-					tree.get(i).nextSmallest = tree.get(i-1);
-				
-				if(i == tree.size()-1)
-					tree.get(tree.size()-1).nextLargest = null;
-				else 
-					tree.get(i).nextLargest = tree.get(i+1);
-			}
-		} else {
-			head.nextLargest = tree.get(0);
-			tail.nextSmallest = tree.get(0);
-		}
-		
-	}
-	
-	/**
-	 * Private help method for {@link #updateNextSmallestAndLargest()} which
-	 * generates a list of nodes from the traversed tree in sorted order. 
-	 * The method creates an empty list and fills it with help from the recursive 
-	 * method {@link #treeTraverse(Node, List)}, to fill up the tree.
-	 * 
-	 * @return list of sorted nodes from the tree.
-	 * @see #updateNextSmallestAndLargest()
-	 * @see #treeTraverse(Node, List)
-	 */
-	private List<Node<T>> traverse() {
-		ArrayList<Node<T>> tree = new ArrayList<>();
-		
-		if(root.leftChild != null)
-			treeTraverse(root.leftChild, tree);
-		
-		tree.add(root);
-		
-		if(root.rightChild != null)
-			treeTraverse(root.rightChild, tree);
-		
-		return tree;
-	}
-	
-	/**
-	 * Private recursive help method for {@link #traverse()}, which attempts
-	 * to move as far left as possible, and add those nodes which is the smallest nodes. 
-	 * After that the current node gets added, and then it checks for bigger nodes, 
-	 * which is the nodes to the right.
-	 * 
-	 * @param node to be have it's children and itself checked and added.
-	 * @param tree which is the list of all the added nodes.
-	 * @return list which is the list of all the added nodes.
-	 * @see #traverse()
-	 */
-	private List<Node<T>> treeTraverse(Node<T> node, List<Node<T>> tree) {
-		System.out.println("Traversing.. tree size: " + tree.size());
-		if(node.leftChild != null)
-			treeTraverse(node.leftChild, tree);
-		
-		tree.add(node);
-		
-		if(node.rightChild != null)
-			treeTraverse(node.rightChild, tree);
-		
-		return tree;
+	public boolean contains(T data) {
+		return root == null ? false : root.contains(data);
 	}
 	
 	/**
@@ -266,11 +229,35 @@ public class MyTreeSet<T extends Comparable<T>> {
 	}
 	
 	/**
-	 * Method that will print out the tree. Calls {@link Node#toString()} to
+	 * Clears the tree and linkedlist.
+	 */
+	public void clear() {
+		head.nextLargest = null;
+		tail.nextSmallest = null;
+		root = null;
+	}
+	
+	
+	/**
+	 * Package only method that is intended for testing only. 
+	 * It will print out the tree. Calls {@link Node#toString()} to
 	 * generate the <code>String</code> of all the nodes.
 	 */
-	public String toString() {
+	String printString() {
 		return "[" + (root == null ? "" : root.printString()) + "]";
 	}
 
+	@Override
+	public String toString() {
+		String str = "[";
+		Node<T> current = head.nextLargest;
+		if(head.nextLargest != null)
+			while(current.nextLargest.nextLargest != null) {
+				str += current.data + ", ";
+				current = current.nextLargest;
+			}
+		str += current + "]";
+		
+		return str;
+	}
 }

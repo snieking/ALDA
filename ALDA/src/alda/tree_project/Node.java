@@ -76,12 +76,12 @@ public class Node<T extends Comparable<T>> {
 	}
 	
 	/**
-	 * Privat rekursiv hjälpmetod för remove som används för att kolla en vanlig nod, 
-	 * d.v.s. inte root noden, och den kallar på checkRoot för att göra ändringar på 
-	 * subroots ifall data matchar.
+	 * Private recursive assist method for {@link #remove(Comparable)} that is used to check 
+	 * a normal node, not the root node. It calls {@link #checkRoot(Node, Comparable)} to make the changes on
+	 * subroots if the data has matched.
 	 * 
-	 * @param node 		som den börjar att titta på. 
-	 * @param data 		att leta efter.
+	 * @param node 		that it starts looking at.
+	 * @param data 		to look for.
 	 */
 	private void checkNormal(Node<T> node, T data) {
 		int cmp;
@@ -116,11 +116,12 @@ public class Node<T extends Comparable<T>> {
 	}
 	
 	/**
-	 * Privat hjälpmetod för remove som kollar och jämför en root/subroot och byter platser ifall ändring sker.
+	 * Private assist method for {@link #remove(Comparable)} that 
+	 * checks and compares a root/subroot and switches place if changes occur.
 	 * 
-	 * @param root 		som utgör noden som den ska kolla.
-	 * @param data 		som noden ska jämföras med.
-	 * @return newRoot 	vilket är den nya rooten/subrooten.
+	 * @param root 		which is the node that it checks.
+	 * @param data 		which the node should compare to.
+	 * @return newRoot 	which is the updated root/subroot.
 	 */
 	private Node<T> checkRoot(Node<T> root, T data) {
 		if(root.data == data) {
@@ -147,17 +148,16 @@ public class Node<T extends Comparable<T>> {
 				return newRoot;
 			}
 			else {
-				/* Sätter newRoot till det lägsta värdet  på höger sidan */
+				/* Sets newRoot to the lowest value on the left side. */
 				Node<T> newRoot = temp.leftChild; 
 
-				/* Tar bort kopplingen till nya rooten */
+				/* Removes the connection to the new root. */
 				temp.leftChild = null;
 				
-				/* Letar upp det högsta värdet från nya rooten och lägger till värdet som
-					var innan. */ 
+				/* Searches for the highest value from the new root and adds the value which was before */
 				findMax(newRoot).rightChild = root.rightChild;
 				
-				/* Sätter nya rootens left till vänster av ursprungliga root */
+				/* Sets the new roots left child to the left child of the original root. */
 				newRoot.leftChild = tempLeft;
 				return newRoot;
 			}
@@ -167,12 +167,12 @@ public class Node<T extends Comparable<T>> {
 	}
 	
 	/**
-	 * Privat hjälpmetod som är till nytta vid borttag.
-	 * Letar upp det lägsta elementet i sub(trädet) som noden utgör root i.
-	 * Vilket är tänkt att ta den borttagna rootens plats.
+	 * Private assist method which is useful during removal.
+	 * Searches for the lowest value in the sub(tree) that the node is root in.
+	 * Which is planned to to take the removed roots place.
 	 * 
-	 * @param node 		vilket utgör rooten i (sub)trädet.
-	 * @return det minsta elementet i det (sub)träd som noden utgör root i.
+	 * @param node 		which is the root in the (sub)tree.
+	 * @return the smallest element in the (sub)tree that the node is root in.
 	 */
 	private Node<T> findMin(Node<T> node) {
 		if(node.leftChild.leftChild != null)
@@ -182,11 +182,11 @@ public class Node<T extends Comparable<T>> {
 	}
 	
 	/**
-	 * Privat rekursiv hjälpmetod som hittar det mest högra värdet under noden.
-	 * Användbart vid borttagning.
+	 * Private recursive assist method which founds the highest element under the node.
+	 * Useful when removing.
 	 * 
-	 * @param node 		som den ska leta under.
-	 * @return node		vilket är den mest högra.
+	 * @param node 		that it should search under.
+	 * @return node		which is the most right one.
 	 */
 	private Node<T> findMax(Node<T> node) {
 		if(node.rightChild != null)
@@ -196,11 +196,11 @@ public class Node<T extends Comparable<T>> {
 	}
 	
 	/**
-	 * Privat rekursiv hjälpmetod som används för att hitta noden innan det lägsta värdet,
-	 * som checkRoot använder som hjälp när den ska flytta om i trädet.
+	 * Private recursive assist method that is used to find the node before the lowest value.
+	 * Which {@link #checkRoot(Node, Comparable)} uses as help when it's gonna move nodes around the tree.
 	 * 
-	 * @param node 		som den ska leta vidare i.
-	 * @return den lägsta noden.
+	 * @param node 		which it should continue searching in.
+	 * @return the lowest value.
 	 */
 	private Node<T> findNodeBeforeMin(Node<T> node) {
 		if(node.rightChild != null) {
@@ -212,14 +212,45 @@ public class Node<T extends Comparable<T>> {
 		return node;
 	}
 	
+	/**
+	 * Checks if the given element exists in the (sub)tree that the node is root in.
+	 * 
+	 * @param data 		that it is searching for.
+	 * @return <code>true</code> if the searched element exists in the (sub)tree that the node
+	 * is root in. Else, if it can't be found, returns <code>false</code>.
+	 */
 	public boolean contains(T data) {
-		return false; // TODO
+		if(search(this, data).data == data)
+			return true;
+		else
+			return false;
 	}
 	
 	/**
-	 * Storleken på det (sub)träd som noden utgör root i.
+	 * Privat assist method that is used recursively by 
+	 * {@link #contains(Comparable)} to search for the element.
 	 * 
-	 * @return det totala antalet noder i det (sub)träd som noden utgör root i.
+	 * @param node		the next one it should search under.
+	 * @return node 	that has the same data as the contains element, else the root.
+	 */
+	private Node<T> search(Node<T> node, T data) {
+		int cmp = data.compareTo(node.data);
+		if(cmp < 0) {
+			if(node.leftChild != null)
+				return search(node.leftChild, data);
+		}
+		else if(cmp > 0) {
+			if(node.rightChild != null)
+				return search(node.rightChild, data);
+		}
+		
+		return node;
+	}
+	
+	/**
+	 * Size of the (sub)tree that the node is root in.
+	 * 
+	 * @return size which is the total amount of nodes in the (sub)tree that the node is root in.
 	 */
 	public int size() {
 		int size = 0;
@@ -228,11 +259,12 @@ public class Node<T extends Comparable<T>> {
 	}
 	
 	/**
-	 * Privat rekursiv hjälpmetod för size som räknar ut storleken.
+	 * Private recursive assist method for 
+	 * {@link #size()} that calculates the size.
 	 * 
-	 * @param node 		som den börjar räkna ifrån.
-	 * @param size		räknaren som en int.
-	 * @return
+	 * @param node 		that it calculate from.
+	 * @param size		that is the counter.
+	 * @return size		that is the counter.
 	 */
 	private int sizeCalculator(Node<T> node, int siz) {
 		int size = siz+1;
@@ -244,10 +276,10 @@ public class Node<T extends Comparable<T>> {
 	}
 	
 	/**
-	 * Det högsta djupet i det (sub)träd som noden utgör root i.
-	 * Metoden använder sig av Math.max för att välja den djupaste vägen.
+	 * The highest depth in the (sub)tree that the node is root in.
+	 * Uses Math.max to choose the highest depth from its children.
 	 * 
-	 * @return djupet.
+	 * @return depth.
 	 */
 	public int depth() {
 		int leftDep = 0, rightDep = 0;
@@ -259,12 +291,12 @@ public class Node<T extends Comparable<T>> {
 	}
 	
 	/**
-	 * Privat hjälpmetod för depth som används för att göra den faktiska uträkningen.
-	 * Går rekursivt neråt så långt det går från den ursprungliga noden. Metoden använder
-	 * sig av Math.max för att välja den djupaste vägen.
+	 * Private assist method for depth that is used to do the actual calculations.
+	 * Travels recursively as far down as possible from the node. The method uses
+	 * Math.max to choose the deepest way.
 	 * 
-	 * @param node		noden den ska klättra neråt från.
-	 * @param dep		storleken på djupet som en int.
+	 * @param node		that it should climb down from.
+	 * @param dep		which is the size of the depth.
 	 * @return
 	 */
 	private int depthCalculator(Node<T> node, int dep) {
@@ -279,25 +311,29 @@ public class Node<T extends Comparable<T>> {
 	}
 	
 	/**
-	 * Returnerar en strängrepresentation fär det (sub)träd som noden utgär root
-	 * i. Denna representation bestär av elementens dataobjekt i sorterad
-	 * ordning med ", " mellan elementen.
+	 * Package method for testing purposes. 
+	 * Returns a stringrepresentation of the (sub)tree that the node is root in.
+	 * This representation contains the data of the elements in a sorted order with comma 
+	 * seperating them.
 	 * 
-	 * @return strängrepresentationen för det (sub)träd som noden utgör root i.
+	 * @return stringrepresentation of the (sub)tree that the node is root in.
 	 */
-	public String printString() {
+	String printString() {
 		String sb = "";
 		sb += buildString(this, sb);
 		return sb;
 	}
 	
 	/**
-	 * Privat hjälpmetod för toString som rekursivt tar fram alla följande noder.
-	 * @param node 		som den kollar från.
-	 * @param sb		den nuvarande strängen.
+	 * Package only method intended for testing only. 
+	 * Assist method for {@link #printString()} which 
+	 * recursively gathers all nodes. 
+	 * 
+	 * @param node 		that it should look from.
+	 * @param sb		the current string.
 	 * @return
 	 */
-	private String buildString(Node<T> node, String string) {
+	String buildString(Node<T> node, String string) {
 		if(node.leftChild != null) {
 			string = buildString(node.leftChild, string);
 			string += ", ";
