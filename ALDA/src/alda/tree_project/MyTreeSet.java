@@ -60,15 +60,16 @@ public class MyTreeSet<T extends Comparable<T>> {
 					head.nextLargest.nextSmallest = newNode;
 					head.nextLargest = newNode;
 					newNode.nextSmallest = head;
-					
 				}
+				
 				if(newNode.data.compareTo(tail.nextSmallest.data) > 0) {
 					normal = false;
-						newNode.nextSmallest = tail.nextSmallest;
-						tail.nextSmallest.nextLargest = newNode;
-						tail.nextSmallest = newNode;
-						newNode.nextLargest = tail;
+					newNode.nextSmallest = tail.nextSmallest;
+					tail.nextSmallest.nextLargest = newNode;
+					tail.nextSmallest = newNode;
+					newNode.nextLargest = tail;
 				}
+				
 				if(normal) {
 					newNode.nextSmallest = current;
 					newNode.nextLargest = current.nextLargest;
