@@ -122,8 +122,9 @@ public class MyTreeSet<T extends Comparable<T>> {
 	}
 	
 	/**
-	 * A private assist method that is used recursively by {@link #contains(Comparable)}
-	 * to search for the element.
+	 * A private assist method that is used by {@link #add(Comparable)} and {@link #remove(Comparable)} 
+	 * to find the node holding the data. If it doesn't find the exact node, it returns the one before and the
+	 * responsibility to compare the data is on the methods that use it.
 	 * 
 	 * @param node		the next one it should search under.
 	 * @return node 	that has the same data as the contains element, else the root.

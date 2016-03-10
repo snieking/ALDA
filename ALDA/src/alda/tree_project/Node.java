@@ -1,8 +1,5 @@
 package alda.tree_project;
 
-import java.util.List;
-
-import alda.tree.BinarySearchTreeNode;
 
 /**
  * The node class intended to be used in our implementation of TreeSet.
