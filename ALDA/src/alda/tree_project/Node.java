@@ -202,6 +202,7 @@ public class Node<T extends Comparable<T>> {
 	/**
 	 * Private recursive assist method that is used to find the node before the lowest value.
 	 * Which {@link #checkRoot(Node, Comparable)} uses as help when it's gonna move nodes around the tree.
+	 * Uses {@link #findMin(Node)}.
 	 * 
 	 * @param node 		which it should continue searching in.
 	 * @return the lowest value.
@@ -211,8 +212,7 @@ public class Node<T extends Comparable<T>> {
 		if(node.rightChild != null) {
 			if(node.rightChild.leftChild != null)
 				return findMin(node.rightChild);
-			else
-				return node;
+
 		}
 		return node;
 	}
