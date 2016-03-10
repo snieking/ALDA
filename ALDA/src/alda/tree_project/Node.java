@@ -68,7 +68,6 @@ public class Node<T extends Comparable<T>> {
 	public Node<T> remove(T data) {
 		Node<T> theRoot = this;
 		theRoot = checkRoot(this, data);
-		checkNormal(theRoot, data);
 		return theRoot;
 	}
 	
@@ -114,7 +113,9 @@ public class Node<T extends Comparable<T>> {
 	
 	/**
 	 * Private assist method for {@link #remove(Comparable)} that 
-	 * checks and compares a root/subroot and switches place if changes occur.
+	 * checks and compares a root/subroot and switches place if changes occur. 
+	 * This method only makes changes if the roots data is the same as the data that is to be removed, 
+	 * else it will call {@link #checkNormal(Node, Comparable)}.
 	 * 
 	 * @param root 		which is the node that it checks.
 	 * @param data 		which the node should compare to.
@@ -159,6 +160,8 @@ public class Node<T extends Comparable<T>> {
 				return newRoot;
 			}
 		}
+		
+		checkNormal(root, data);
 		
 		return root;
 	}
