@@ -22,7 +22,7 @@ public class Node<T extends Comparable<T>> {
 	 * 
 	 * @param data which the Node is a wrapper class around.
 	 */
-	public Node(T data) {
+	Node(T data) {
 		this.data = data;
 		nextSmallest = null;
 		nextLargest = null;
@@ -37,7 +37,7 @@ public class Node<T extends Comparable<T>> {
 	 * @param data 		for the new node to be added.
 	 * @return <code>true</code> if a new node was successfully added, else <code>false</code>
 	 */
-	public boolean add(T data) {
+	boolean add(T data) {
 		if(data == null)
 			throw new IllegalArgumentException("Can't add null to the tree");
 		
@@ -60,14 +60,14 @@ public class Node<T extends Comparable<T>> {
 	}
 	
 	/**
-	 * Removes an element from the tree. 
+	 * Removes an element from the tree. Calls {@link #checkRoot(Node, Comparable)}.
 	 * If the element doesn't exist, nothing will happen.
 	 * @param data
-	 * @return
+	 * @return root of the tree.
+	 * @see #checkRoot(Node, Comparable)
 	 */
-	public Node<T> remove(T data) {
-		Node<T> theRoot = this;
-		theRoot = checkRoot(this, data);
+	Node<T> remove(T data) {
+		Node<T> theRoot = checkRoot(this, data);
 		return theRoot;
 	}
 	
@@ -78,6 +78,8 @@ public class Node<T extends Comparable<T>> {
 	 * 
 	 * @param node 		that it starts looking at.
 	 * @param data 		to look for.
+	 * @see #remove(Comparable)
+	 * @see #checkRoot(Node, Comparable)
 	 */
 	private void checkNormal(Node<T> node, T data) {
 		int cmp;
@@ -120,6 +122,8 @@ public class Node<T extends Comparable<T>> {
 	 * @param root 		which is the node that it checks.
 	 * @param data 		which the node should compare to.
 	 * @return newRoot 	which is the updated root/subroot.
+	 * @see #remove(Comparable)
+	 * @see #checkNormal(Node, Comparable)
 	 */
 	private Node<T> checkRoot(Node<T> root, T data) {
 		if(root.data == data) {
@@ -201,6 +205,7 @@ public class Node<T extends Comparable<T>> {
 	 * 
 	 * @param node 		which it should continue searching in.
 	 * @return the lowest value.
+	 * @see #checkRoot(Node, Comparable)
 	 */
 	private Node<T> findNodeBeforeMin(Node<T> node) {
 		if(node.rightChild != null) {
@@ -213,13 +218,14 @@ public class Node<T extends Comparable<T>> {
 	}
 	
 	/**
-	 * Checks if the given element exists in the (sub)tree that the node is root in.
+	 * Checks if the given element exists in the (sub)tree that the node is root in. 
+	 * Uses {@link #search(Node, Comparable)} to find the node.
 	 * 
 	 * @param data 		that it is searching for.
 	 * @return <code>true</code> if the searched element exists in the (sub)tree that the node
 	 * is root in. Else, if it can't be found, returns <code>false</code>.
 	 */
-	public boolean contains(T data) {
+	boolean contains(T data) {
 		if(search(this, data).data == data)
 			return true;
 		else
@@ -232,6 +238,7 @@ public class Node<T extends Comparable<T>> {
 	 * 
 	 * @param node		the next one it should search under.
 	 * @return node 	that has the same data as the contains element, else the root.
+	 * @see #contains(Comparable)
 	 */
 	private Node<T> search(Node<T> node, T data) {
 		int cmp = data.compareTo(node.data);
@@ -248,11 +255,13 @@ public class Node<T extends Comparable<T>> {
 	}
 	
 	/**
-	 * Size of the (sub)tree that the node is root in.
+	 * Size of the (sub)tree that the node is root in. 
+	 * Calls {@link #sizeCalculator(Node, int)} to do the calculation.
 	 * 
 	 * @return size which is the total amount of nodes in the (sub)tree that the node is root in.
+	 * @see #sizeCalculator(Node, int)
 	 */
-	public int size() {
+	int size() {
 		int size = 0;
 		size += sizeCalculator(this, size);
 		return size;
@@ -265,6 +274,7 @@ public class Node<T extends Comparable<T>> {
 	 * @param node 		that it calculate from.
 	 * @param size		that is the counter.
 	 * @return size		that is the counter.
+	 * @see #size()
 	 */
 	private int sizeCalculator(Node<T> node, int siz) {
 		int size = siz+1;
@@ -277,11 +287,13 @@ public class Node<T extends Comparable<T>> {
 	
 	/**
 	 * The highest depth in the (sub)tree that the node is root in.
+	 * Calls {@link #depthCalculator(Node, int)} to do the calculation.
 	 * Uses Math.max to choose the highest depth from its children.
 	 * 
 	 * @return depth.
+	 * @see #depthCalculator(Node, int)
 	 */
-	public int depth() {
+	int depth() {
 		int leftDep = 0, rightDep = 0;
 		if(leftChild != null)
 			leftDep = depthCalculator(this.leftChild, 1);
