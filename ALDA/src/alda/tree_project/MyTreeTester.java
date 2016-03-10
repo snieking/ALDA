@@ -30,6 +30,8 @@ public class MyTreeTester<T extends Comparable<T>> {
 		assertEquals(6, intTree.size());
 		assertTrue(intTree.remove(2));
 		assertFalse(intTree.remove(20));
+		assertTrue(intTree.contains(4));
+		assertFalse(intTree.contains(2));
 		assertEquals("[4, 7, 9, 10, 14]", intTree.toString());
 		assertEquals("[4, 7, 9, 10, 14]", intTree.printString());
 		assertEquals(3, intTree.depth());

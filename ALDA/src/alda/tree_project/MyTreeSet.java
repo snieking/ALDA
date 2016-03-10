@@ -102,7 +102,7 @@ public class MyTreeSet<T extends Comparable<T>> {
 		if (root != null) {
 			Node<T> delNode = search(root, data);
 
-			if(delNode.data == data) {
+			if(delNode != null) {
 				if(delNode.nextSmallest == head) {
 					head.nextLargest = delNode.nextLargest;
 					delNode.nextLargest.nextSmallest = head;
@@ -123,11 +123,11 @@ public class MyTreeSet<T extends Comparable<T>> {
 	
 	/**
 	 * A private assist method that is used by {@link #add(Comparable)} and {@link #remove(Comparable)} 
-	 * to find the node holding the data. If it doesn't find the exact node, it returns the one before and the
-	 * responsibility to compare the data is on the methods that use it.
+	 * to find the node holding the data. If it doesn't find the exact node, it returns <code>null</code> 
+	 * and it's the method using this method's responsibility to check for null.
 	 * 
 	 * @param node		the next one it should search under.
-	 * @return node 	that has the same data as the contains element, else the root.
+	 * @return node 	that has the same data as the contains element, else <code>null</code>.
 	 */
 	private Node<T> search(Node<T> node, T data) {
 		int cmp = data.compareTo(node.data);
@@ -140,7 +140,10 @@ public class MyTreeSet<T extends Comparable<T>> {
 				return search(node.rightChild, data);
 		}
 		
-		return node;
+		if(node.data.equals(data))
+			return node;
+		else
+			return null; // Node with searched data doesn't excist.
 	}
 	
 	/**
